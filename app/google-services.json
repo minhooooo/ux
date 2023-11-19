@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1072618535484",
+    "project_id": "uxdesign-ae86d",
+    "storage_bucket": "uxdesign-ae86d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1072618535484:android:e2fe33b7a01ed759b3e139",
+        "android_client_info": {
+          "package_name": "com.example.ux"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9bl5j_HZggz6MizW9VAPkrJ3sIejgyJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

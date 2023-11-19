@@ -13,4 +13,12 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="BottomNavigationView">
+        <item name="fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="mainView">
+        <item name="fontFamily">@font/pretendard_regular</item>
+    </style>
 </resources>

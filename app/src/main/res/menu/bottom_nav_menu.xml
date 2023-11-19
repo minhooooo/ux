@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/first"
+        app:showAsAction="withText"
+        android:enabled="true"
+        android:icon="@drawable/icon_chat"
+        android:title="채팅"/>
+    <item android:id="@+id/second"
+        app:showAsAction="withText"
+        android:enabled="true"
+        android:icon="@drawable/icon_calendar"
+        android:title="캘린더" />
+    <item android:id="@+id/third"
+        app:showAsAction="withText"
+        android:enabled="true"
+        android:icon="@drawable/icon_profile"
+        android:title="프로필" />
+</menu>

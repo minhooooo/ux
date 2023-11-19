@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context=".SignUpActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="30dp"
+        android:padding="10dp"
+        android:background="@drawable/line_gray"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="회원가입"
+        android:textColor="@color/black"
+        android:textSize="22dp"
+        android:fontFamily="@font/pretendard_bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginBottom="30dp"
+            android:theme="@style/mainView"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/circle_blue"
+                android:text="이메일" />
+
+            <EditText
+                android:id="@+id/email_area"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edittext"
+                android:ems="10"
+                android:hint="이메일 주소"
+                android:textColorHint="#A3A3A3"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/circle_blue"
+                    android:text="닉네임" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/nickChkBtn"
+                    android:layout_width="95dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/btn_circle_blue"
+                    android:text="중복 확인"
+                    android:textSize="12sp"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edittext"
+                android:ems="10"
+                android:hint="닉네임"
+                android:inputType="textPersonName"
+                android:maxLength="8"
+                android:lines="1"
+                android:textColorHint="#A3A3A3"
+                android:paddingLeft="10dp" />
+
+            <TextView
+                android:id="@+id/nick_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="13dp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:drawableStart="@drawable/circle_blue"
+                android:text="비밀번호" />
+
+            <EditText
+                android:id="@+id/passwd_area"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edittext"
+                android:ems="10"
+                android:hint="비밀번호"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:textColorHint="#A3A3A3"
+                android:paddingLeft="10dp"  />
+
+            <EditText
+                android:id="@+id/passwd_area_check"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edittext"
+                android:ems="10"
+                android:hint="비밀번호 확인"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:textColorHint="#A3A3A3"
+                android:paddingLeft="10dp"  />
+
+            <TextView
+                android:id="@+id/pw_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="13dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/join_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_blue"
+            android:text="회원가입 완료"
+            android:textSize="15dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>
