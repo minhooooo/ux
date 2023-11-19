@@ -5,10 +5,124 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_weight="1">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/modifyBtn"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:layout_gravity="top|right"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/pretendard_medium"
+                android:background="@drawable/btn_circle_gray"
+                android:text="정보수정"
+                android:textSize="14sp"
+                android:textColor="#787878" />
+
+            <ImageButton
+                android:id="@+id/profileBG"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/bg_ku" />
+
+            <ImageButton
+                android:id="@+id/profileImg"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="30dp"
+                android:scaleType="centerInside"
+                android:background="@drawable/icon_ku" />
+
+            <ImageButton
+                android:id="@+id/profileBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="145dp"
+                android:layout_marginLeft="125dp"
+                android:background="@drawable/btn_edit_background" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_gravity="left"
+                    android:text="닉네임"
+                    android:textColor="@color/black"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/pretendard_bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="10dp"
+                    android:text="건국대 학과"
+                    android:textColor="#787878"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/pretendard_light" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="200dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:src="@drawable/line_gray" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/logoutBtn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_marginTop="560dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/btn_blue"
+                android:text="로그아웃"
+                android:textSize="15dp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/userDeleteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_marginTop="620dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/btn_blue"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+                android:text="탈퇴하기"
+                android:textSize="15dp"
+                android:fontFamily="@font/pretendard_semibold"
+                android:textColor="@color/black" />
+        </FrameLayout>
+    </ScrollView>
 </FrameLayout>

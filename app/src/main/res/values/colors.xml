@@ -11,4 +11,16 @@
     <color name="gray">#FFF5F5F5</color>
     <color name="darkGray">#FF4D5158</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- 프로필 배경색 리스트 -->
+    <color name="bg1">#FFFFF7A9</color>
+    <color name="bg2">#FFFABCE1</color>
+    <color name="bg3">#FFC2C0FF</color>
+    <color name="bg4">#FFFFC28A</color>
+    <color name="bg5">#FF998282</color>
+    <color name="bg6">#FFB6C1E9</color>
+    <color name="bg7">#FFB8E1C3</color>
+    <color name="bg8">#FFD3D4D4</color>
+    <color name="bg9">#FFF2C0FF</color>
+    <color name="bg10">#FF829199</color>
 </resources>
