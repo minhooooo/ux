@@ -125,8 +125,27 @@ class SignUpActivity : AppCompatActivity() {
                             val userEntry = table.child(uid)
                             userEntry.setValue(user).addOnCompleteListener { userEntryTask ->
                                 if (userEntryTask.isSuccessful) {
-                                    // 데이터베이스에 사용자 정보 추가 성공
+                                    // 데이터베이스에 캘린더 정보 추가 성공
+                                    val year = "2023" // 예시로 고정된 연도
+                                    val months = arrayOf("1m", "2m", "3m", "4m", "5m", "6m", "7m", "8m", "9m", "10m", "11m", "12m")
+                                    val days28 = arrayOf("1d", "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d", "10d", "11d", "12d", "13d", "14d", "15d", "16d", "17d", "18d", "19d", "20d", "21d", "22d", "23d", "24d", "25d", "26d", "27d", "28d")
+                                    val days30 = days28 + arrayOf("29d", "30d")
+                                    val days31 = days30 + arrayOf("31d")
 
+                                    // 월별 데이터 초기화
+                                    for (month in months) {
+                                        val monthEntry = userEntry.child("calendar").child(year).child(month)
+
+                                        // 일별 데이터 초기화
+                                        val days: Array<String> = when (month) {
+                                            "2m" -> days28
+                                            "4m", "6m", "9m", "11m" -> days30
+                                            else -> days31
+                                        }
+                                        for (day in days) {
+                                            monthEntry.child(day).setValue("")
+                                        }
+                                    }
 
                                     Toast.makeText(this@SignUpActivity, "회원가입 성공", Toast.LENGTH_SHORT).show()
 
