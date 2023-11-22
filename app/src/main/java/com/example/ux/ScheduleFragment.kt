@@ -1,63 +1,92 @@
 package com.example.ux
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.ux.databinding.ActivitySignUpBinding
+import com.example.ux.databinding.FragmentScheduleBinding
+import com.google.firebase.auth.FirebaseAuth
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ScheduleFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ScheduleFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentScheduleBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var auth: FirebaseAuth
+    private var uid: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        uid = arguments?.getString(ARG_UID)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedule, container, false)
+        _binding = FragmentScheduleBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ScheduleFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ScheduleFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        private const val ARG_UID = "uid"
+
+        fun newInstance(uid: String): ScheduleFragment {
+            val fragment = ScheduleFragment()
+            val bundle = Bundle().apply {
+                putString(ARG_UID, uid)
             }
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
+
+    private fun addtime(){
+        binding.apply {
+            var isCreate = true
+            create.setOnClickListener {
+                if (isCreate) {
+                    // 현재 'create' 상태인 경우, 'apply' 상태로 변경
+                    create.text = "적용"
+                    create.setBackgroundResource(R.drawable.btn_circle_blue) // 'apply' 상태의 배경
+                    create.setTextColor(Color.WHITE) // 'apply' 상태의 텍스트 색상
+
+                    //gridlayout에 반응 추가
+                    for (i in 0 until timeTableView.childCount) {
+                        val child = timeTableView.getChildAt(i)
+                        val params = child.layoutParams as GridLayout.LayoutParams
+
+                        val column = child.tag.toString().toIntOrNull()
+
+                        if (child is TextView && column != 0) {
+                            child.setOnClickListener {
+                                // 클릭된 TextView의 배경색 변경
+                                child.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.bg6))
+                            }
+                        }
+                    }
+                }
+                else {
+                    // 현재 'apply' 상태인 경우, 'create' 상태로 변경
+                    create.text = "등록"
+                    create.setBackgroundResource(R.drawable.btn_circle_gray) // 'create' 상태의 배경
+                    create.setTextColor(Color.parseColor("#787878")) // 'create' 상태의 텍스트 색상
+
+                    //gridlayout에 색이 바뀐부분 db저장
+                }
+                isCreate = !isCreate // 상태 토글
+            }
+        }
     }
 }
