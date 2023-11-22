@@ -117,7 +117,10 @@ class SignUpActivity : AppCompatActivity() {
                             //추가 성공할 경우
                             val uid = FirebaseAuth.getInstance().uid ?: null
                             val username = username.text.toString()
-                            val user = User(uid!!, username)
+                            val university = university.text.toString()
+                            val major = major.text.toString()
+                            val profileColor = "bg1"
+                            val user = User(uid!!, username, university, major, profileColor)
 
                             //데이터베이스에 회원가입한 사용자 정보 추가
                             val database = Firebase.database
@@ -125,6 +128,15 @@ class SignUpActivity : AppCompatActivity() {
                             val userEntry = table.child(uid)
                             userEntry.setValue(user).addOnCompleteListener { userEntryTask ->
                                 if (userEntryTask.isSuccessful) {
+                                    // 친구 폴더 생성
+                                    userEntry.child("friend").setValue("")
+
+                                    // 채팅방 폴더 생성
+                                    userEntry.child("chatRoom").setValue("")
+
+                                    // 시간표 폴더 생성
+                                    userEntry.child("timeTable").child("possible").setValue("")
+
                                     // 데이터베이스에 캘린더 정보 추가 성공
                                     val year = "2023" // 예시로 고정된 연도
                                     val months = arrayOf("1m", "2m", "3m", "4m", "5m", "6m", "7m", "8m", "9m", "10m", "11m", "12m")
