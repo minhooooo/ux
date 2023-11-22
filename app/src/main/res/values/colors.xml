@@ -23,4 +23,11 @@
     <color name="bg8">#FFD3D4D4</color>
     <color name="bg9">#FFF2C0FF</color>
     <color name="bg10">#FF829199</color>
+
+    <color name="main_color">#FF44546A</color>
+    <color name="selected_color">#FF3D659B</color>
+    <color name="accent_color">#FF0057FF</color>
+    <color name="stroke_color">#FF829199</color>
+    <color name="time_color">#E8EBEF</color>
+    <color name="sunday">#E20A16</color>
 </resources>
