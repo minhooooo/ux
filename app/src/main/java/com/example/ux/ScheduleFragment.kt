@@ -77,6 +77,7 @@ class ScheduleFragment : Fragment() {
             val resId = resources.getIdentifier(textViewIdName, "id", requireContext().packageName)
             val textView = binding.root.findViewById<TextView>(resId)
             textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected)
+            // TODO = textView.setTag(R.id.tag_drawable_resource, R.drawable.cell_selected) // 태그 설정
         }
     }
 
@@ -102,7 +103,7 @@ class ScheduleFragment : Fragment() {
                                 // 클릭된 TextView의 배경색 변경
                                 val resourceName = resources.getResourceEntryName(child.id)
 
-                                if (child.background is ColorDrawable && (child.background as ColorDrawable).color == ContextCompat.getColor(requireContext(), R.color.bg6)) {
+                                if (child.background is ColorDrawable && child.background == ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected) ) {
                                     child.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_normal)
                                     clickedTextViewIds.remove(resourceName)
                                 }
