@@ -98,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
                 preference.putString("password", edt_password.text.toString())
                 preference.apply()
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("uid",user.uid )
                 startActivity(intent)
                 finish()
             } catch (e: Exception) {
