@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ class CalendarFragment : Fragment() {
 
     lateinit var binding: FragmentCalendarBinding
     lateinit var mContext: Context
+    private var uid: String? = null
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -25,6 +27,8 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        uid = arguments?.getString("uid")
+        Log.d("calendarfragment", uid.toString())
         return binding.root
     }
 
@@ -35,6 +39,8 @@ class CalendarFragment : Fragment() {
 
     private fun Toolbar() {
         val tabLayout = binding.friendTabs
+        val bundle = Bundle()
+        bundle.putString("uid", uid)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -45,6 +51,8 @@ class CalendarFragment : Fragment() {
                 when (tabPosition) {
                     0 -> {
                         val scheduleFragment = ScheduleFragment()
+                        scheduleFragment.arguments = bundle
+
                         requireActivity().supportFragmentManager.beginTransaction()
                             .replace(R.id.friend_container, scheduleFragment).commit()
                     }
@@ -69,6 +77,8 @@ class CalendarFragment : Fragment() {
 
         // Set default fragment
         val scheduleFragment = ScheduleFragment()
+        scheduleFragment.arguments = bundle
+
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.friend_container, scheduleFragment).commit()
 
