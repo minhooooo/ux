@@ -1,59 +1,130 @@
 package com.example.ux
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.example.ux.databinding.FragmentProfileBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    lateinit var binding: FragmentProfileBinding
+    lateinit var mContext: Context
+    lateinit var myUid: String
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // 사용자 정보 가져와서 화면에 설정
+//        displayInfo()
+
+        // 사용자 배경색 정보 가져와서 화면에 설정
+        displayProfileColor()
+
+        // 정보 수정 버튼 이벤트
+//        modifyInfo()
+
+        //로그아웃 버튼 이벤트
+//        logoutInfo()
+
+        //회원탈퇴 버튼 이벤트
+//        deleteMember()
+
+        // profileImg 버튼 클릭 이벤트 처리
+        binding.profileImg.setOnClickListener {
+            val intent = Intent(requireContext(), ProfileColorActivity::class.java)
+            startActivityForResult(intent, PROFILE_COLOR_REQUEST_CODE)
+        }
+
+        // profileBtn 버튼 클릭 이벤트 처리
+        binding.profileBtn.setOnClickListener {
+            val intent = Intent(requireContext(), ProfileColorActivity::class.java)
+            startActivityForResult(intent, PROFILE_COLOR_REQUEST_CODE)
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        private const val PROFILE_COLOR_REQUEST_CODE = 100
+        private const val PROFILE_MODIFY_REQUEST_CODE = 101
+    }
+
+    private fun displayProfileColor() {
+        myUid = FirebaseAuth.getInstance().currentUser?.uid!!
+
+        val db = Firebase.database.getReference("moi")
+        db.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (users in dataSnapshot.children) {
+                    val uid = users.child("uid").value.toString()
+
+                    if (myUid == uid) {
+                        val profileDB = users.child("profileColor").value.toString()
+
+                        // 리소스 식별자 가져오기
+                        val resourceId = mContext.resources.getIdentifier(
+                            profileDB, "drawable", mContext.packageName
+                        )
+
+                        if (resourceId != 0) {
+                            // 기존의 배경 리소스 제거 후 새로운 배경 리소스 설정
+                            binding.profileBG.setBackgroundResource(0)
+                            binding.profileBG.setBackgroundResource(resourceId)
+                        } else {
+                            Toast.makeText(
+                                mContext,
+                                "프로필 배경색 리소스를 찾을 수 없습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
             }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Error handling
+            }
+        })
+    }
+
+    // 프로필 배경 변경 후 다시 프로필 화면으로 돌아감
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if ((requestCode == PROFILE_COLOR_REQUEST_CODE && resultCode == Activity.RESULT_OK)) {
+            // 사용자 배경색 정보 가져와서 화면에 설정
+            displayProfileColor()
+            val selectedItemId = data?.getIntExtra("selectedItemId", R.id.third)
+            activity?.setResult(Activity.RESULT_OK, Intent().putExtra("selectedItemId", selectedItemId))
+        } else if ((requestCode == PROFILE_MODIFY_REQUEST_CODE && resultCode == Activity.RESULT_OK)) {
+            // 사용자 닉네임 정보 가져와서 화면에 설정
+//            displayInfo()
+            val selectedItemId = data?.getIntExtra("selectedItemId", R.id.third)
+            activity?.setResult(Activity.RESULT_OK, Intent().putExtra("selectedItemId", selectedItemId))
+        }
     }
 }
