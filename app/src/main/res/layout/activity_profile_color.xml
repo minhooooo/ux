@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileColorActivity">
+
+    <ImageButton
+        android:id="@+id/profileBG2"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="45dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg_ku" />
+
+    <ImageButton
+        android:id="@+id/profileImg2"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="45dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/icon_ku" />
+
+    <ImageButton
+        android:id="@+id/bg1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginRight="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/btn_bg1" />
+
+    <ImageButton
+        android:id="@+id/bg2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="250dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg2" />
+
+    <ImageButton
+        android:id="@+id/bg3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg3" />
+
+    <ImageButton
+        android:id="@+id/bg4"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="325dp"
+        android:layout_marginRight="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg4" />
+
+    <ImageButton
+        android:id="@+id/bg5"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="325dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg5" />
+
+    <ImageButton
+        android:id="@+id/bg6"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="325dp"
+        android:layout_marginLeft="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg6" />
+
+    <ImageButton
+        android:id="@+id/bg7"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginRight="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg7" />
+
+    <ImageButton
+        android:id="@+id/bg8"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="400dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg8" />
+
+    <ImageButton
+        android:id="@+id/bg9"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginLeft="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg9" />
+
+    <ImageButton
+        android:id="@+id/bg10"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="475dp"
+        android:layout_marginRight="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg10" />
+
+    <ImageButton
+        android:id="@+id/bg11"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="475dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg11" />
+
+    <ImageButton
+        android:id="@+id/bg12"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="475dp"
+        android:layout_marginLeft="80dp"
+        android:layout_gravity="center|top"
+        android:background="@drawable/bg12" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="655dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical" >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/change_button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:background="@drawable/btn_blue"
+            android:text="변경하기"
+            android:textSize="15dp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</FrameLayout>

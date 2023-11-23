@@ -23,6 +23,8 @@
     <color name="bg8">#FFD3D4D4</color>
     <color name="bg9">#FFF2C0FF</color>
     <color name="bg10">#FF829199</color>
+    <color name="bg11">#FFFF8A8A</color>
+    <color name="bg12">#FF6EB279</color>
 
     <color name="main_color">#FF44546A</color>
     <color name="selected_color">#FF3D659B</color>
