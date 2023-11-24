@@ -19,6 +19,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
 class ScheduleFragment : Fragment() {
@@ -42,6 +46,11 @@ class ScheduleFragment : Fragment() {
         uid = arguments?.getString("uid")
         Log.d("schedule", uid.toString())
 
+        var currentTime = LocalDateTime.now();
+        Log.d("dateTest", "1) 현재시간::  " + currentTime)
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formattedDate = currentTime.format(formatter)
+        week(formattedDate)
         // Firebase에서 데이터 로드
         loadDataFromFirebase(uid!!)
         onUserInteractionChangedData()
@@ -157,7 +166,21 @@ class ScheduleFragment : Fragment() {
         }
         return false
     }
+    private fun week(eventDate: String) {
+        val dateArray = eventDate.split("-").toTypedArray()
 
+        val year = dateArray[0].toInt()
+        val month = dateArray[1].toInt()
+        val day = dateArray[2].toInt()
+
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, year)
+        cal.set(Calendar.MONTH, month - 1) // Calendar.MONTH는 0부터 시작합니다. 예: 0은 1월, 1은 2월, ...
+        cal.set(Calendar.DAY_OF_MONTH, day)
+        val weekOfMonth = cal.get(Calendar.WEEK_OF_MONTH)
+        Log.d("scheduls", "EventDate: $year 년 $month 월 $weekOfMonth 번째주")
+
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
