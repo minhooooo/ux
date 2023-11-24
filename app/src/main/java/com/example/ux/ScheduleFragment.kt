@@ -77,7 +77,7 @@ class ScheduleFragment : Fragment() {
             val resId = resources.getIdentifier(textViewIdName, "id", requireContext().packageName)
             val textView = binding.root.findViewById<TextView>(resId)
             textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected)
-            // TODO = textView.setTag(R.id.tag_drawable_resource, R.drawable.cell_selected) // 태그 설정
+            textView.setTag("cell_selected") // 태그 설정
         }
     }
 
@@ -100,17 +100,20 @@ class ScheduleFragment : Fragment() {
 
                         if (child is TextView && column != 0) {
                             child.setOnClickListener {
-                                // 클릭된 TextView의 배경색 변경
-                                val resourceName = resources.getResourceEntryName(child.id)
+                                if (!isCreate){
+                                    val resourceName = resources.getResourceEntryName(child.id)
 
-                                if (child.background is ColorDrawable && child.background == ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected) ) {
-                                    child.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_normal)
-                                    clickedTextViewIds.remove(resourceName)
-                                }
+                                    if (child.tag?.toString() == "cell_selected") {
+                                        child.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_normal)
+                                        child.setTag("cell_normal")
+                                        clickedTextViewIds.remove(resourceName)
+                                    }
 
-                                else{
-                                    child.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected)
-                                    clickedTextViewIds.add(resourceName)
+                                    else{
+                                        child.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected)
+                                        child.setTag("cell_selected")
+                                        clickedTextViewIds.add(resourceName)
+                                    }
                                 }
                             }
                         }
