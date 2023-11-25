@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ChatFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ChatlistFragment"
     android:orientation="vertical">
 
     <LinearLayout
@@ -100,7 +101,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/chat_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/chatlist_item_view"/>
         </ScrollView>
     </LinearLayout>
 
