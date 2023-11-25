@@ -72,12 +72,16 @@
 
         </LinearLayout>
 
-        <TextView
+        <Button
+            android:id="@+id/create"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:text=""
+            android:text="조회"
             android:textSize="14sp"
+            android:background="@drawable/btn_circle_gray"
+            android:fontFamily="@font/pretendard_medium"
+            android:textColor="#787878"
             android:gravity="center" />
 
     </LinearLayout>

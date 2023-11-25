@@ -97,7 +97,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:id="@+id/drop_button"
-            android:src="@drawable/icon_droped"
+            android:src="@drawable/icon_dropyet"
             android:focusableInTouchMode="true"
             android:layout_gravity="center"
             android:background="@android:color/transparent"/>
@@ -182,7 +182,7 @@
                 android:id="@+id/yet_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </ScrollView>
+            </ScrollView>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
