@@ -11,51 +11,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="30dp"
-        android:layout_gravity="fill"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:padding="5dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/last_week"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="center"
-            android:src="@drawable/caret_left" />
+            android:layout_gravity="fill"
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            >
 
-        <TextView
-            android:id="@+id/now_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="9월 2주차 스케줄"
-            android:textAlignment="textStart"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:fontFamily="@font/pretendard_semibold" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/now_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2023년"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:fontFamily="@font/pretendard_semibold" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/last_week"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="fill"
+                        android:src="@drawable/caret_left" />
 
-        <ImageView
-            android:id="@+id/next_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
-            android:src="@drawable/caret_right" />
+                    <TextView
+                        android:id="@+id/now_week"
+                        android:layout_width="0dp"
+                        android:layout_weight="15"
+                        android:layout_height="wrap_content"
+                        android:text="11월 20일 ~ 12월 10일"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="@font/pretendard_semibold" />
+
+                    <ImageView
+                        android:id="@+id/next_week"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:src="@drawable/caret_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/create"
-            android:layout_width="60dp"
-            android:layout_height="20dp"
-            android:text="등록"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="수정"
             android:textSize="14sp"
             android:fontFamily="@font/pretendard_medium"
             android:background="@drawable/btn_circle_gray"
             android:textColor="#787878"
-            android:layout_marginStart="50dp"/>
+            android:gravity="center" />
 
     </LinearLayout>
+
 
     <!--요일-->
     <LinearLayout
@@ -171,6 +204,7 @@
                 android:background="@drawable/cell_normal"
                 android:textSize="11sp"
                 android:gravity="center"
+                android:tag="0"
                 android:text="00" />
 
             <TextView
@@ -259,6 +293,7 @@
                 android:layout_gravity="fill"
                 android:textSize="11sp"
                 android:gravity="center"
+                android:tag="0"
                 android:text="     " />
 
 
@@ -351,6 +386,7 @@
                 android:layout_gravity="fill"
                 android:textSize="11sp"
                 android:background="@drawable/cell_normal"
+                android:tag="0"
                 android:text="02" />
 
             <TextView
@@ -435,6 +471,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
 
             <TextView
@@ -520,6 +557,7 @@
                 android:layout_gravity="fill"
                 android:textSize="11sp"
                 android:background="@drawable/cell_normal"
+                android:tag="0"
                 android:text="04" />
 
             <TextView
@@ -603,6 +641,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
 
             <TextView
@@ -685,6 +724,7 @@
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
+                android:tag="0"
                 android:textSize="11sp"
                 android:text="06" />
             <TextView
@@ -768,6 +808,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
             <TextView
                 android:id="@+id/sunday0700"
@@ -851,6 +892,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="08" />
             <TextView
                 android:id="@+id/sunday0800"
@@ -933,6 +975,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
 
             <TextView
@@ -1016,6 +1059,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="10" />
             <!-- Sunday -->
             <TextView
@@ -1099,6 +1143,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
             <!-- Sunday -->
             <TextView
@@ -1181,6 +1226,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="12" />
             <!-- Sunday -->
             <TextView
@@ -1263,6 +1309,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
             <!-- Sunday -->
             <TextView
@@ -1346,6 +1393,7 @@
                 android:layout_gravity="fill"
                 android:textSize="11sp"
                 android:gravity="center"
+                android:tag="0"
                 android:text="14" />
             <TextView
                 android:id="@+id/sunday1400"
@@ -1424,6 +1472,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="15"
                 android:layout_column="0"
+                android:tag="0"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -1505,6 +1554,7 @@
                 android:layout_row="16"
                 android:layout_column="0"
                 android:background="@drawable/cell_normal"
+                android:tag="0"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -1587,6 +1637,7 @@
                 android:layout_row="17"
                 android:layout_column="0"
                 android:gravity="center"
+                android:tag="0"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
                 android:text="     " />
@@ -1671,6 +1722,7 @@
                 android:layout_gravity="fill"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
+                android:tag="0"
                 android:textSize="11sp"
                 android:text="18" />
             <TextView
@@ -1753,6 +1805,7 @@
                 android:layout_gravity="fill"
                 android:gravity="center"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
 
             <TextView
@@ -1835,6 +1888,7 @@
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
+                android:tag="0"
                 android:textSize="11sp"
                 android:text="20" />
             <TextView
@@ -1917,6 +1971,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="     " />
             <TextView
                 android:id="@+id/sunday2100"
@@ -1999,6 +2054,7 @@
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
+                android:tag="0"
                 android:text="22" />
 
             <TextView
@@ -2081,6 +2137,7 @@
                 android:layout_column="0"
                 android:gravity="center"
                 android:layout_gravity="fill"
+                android:tag="0"
                 android:textSize="11sp"
                 android:text="     " />
 
