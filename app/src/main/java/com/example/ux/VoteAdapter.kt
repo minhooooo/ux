@@ -68,24 +68,24 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
 
         val db = Firebase.database.getReference("chat")
         val meetingRef = db.child(voteData.chatId).child("meeting")
-            .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child(voteData.item).child("rank")
+            .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("rank").child(voteData.item)
         meetingRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // 스냅샷을 사용하여 각 투표 범주의 자식 노드를 가져옵니다.
-                val allowVotesSnapshot = snapshot.child("allow")
-                val disallowVotesSnapshot = snapshot.child("disallow")
+                val agreeVotesSnapshot = snapshot.child("agree")
+                val disagreeVotesSnapshot = snapshot.child("disagree")
                 val yetVotesSnapshot = snapshot.child("yet")
 
                 // 각 범주의 투표자 ID를 리스트로 변환합니다.
-                val allowVotes = allowVotesSnapshot.children.mapNotNull { it.key }
-                val disallowVotes = disallowVotesSnapshot.children.mapNotNull { it.key }
+                val agreeVotes = agreeVotesSnapshot.children.mapNotNull { it.key }
+                val disagreeVotes = disagreeVotesSnapshot.children.mapNotNull { it.key }
                 val yetVotes = yetVotesSnapshot.children.mapNotNull { it.key }
 
-                // 'allow', 'disallow', 'yet' 데이터를 VoteResult 객체에 추가
-                val voteResult = VoteResult(allowVotes, disallowVotes, yetVotes)
+                // 'agree', 'disagree', 'yet' 데이터를 VoteResult 객체에 추가
+                val voteResult = VoteResult(agreeVotes, disagreeVotes, yetVotes)
                 // VoteResult 객체를 사용하여 UI 업데이트 등의 작업 수행
-                val agreecount = voteResult.allowVotes.size
-                val disagreecount = voteResult.disallowVotes.size
+                val agreecount = voteResult.agreeVotes.size
+                val disagreecount = voteResult.disagreeVotes.size
                 val yetcount = voteResult.yetVotes.size
 
                 //chart
@@ -146,21 +146,21 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                 meetingRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         // 스냅샷을 사용하여 각 투표 범주의 자식 노드를 가져옵니다.
-                        val allowVotesSnapshot = snapshot.child("allow")
-                        val disallowVotesSnapshot = snapshot.child("disallow")
+                        val agreeVotesSnapshot = snapshot.child("agree")
+                        val disagreeVotesSnapshot = snapshot.child("disagree")
                         val yetVotesSnapshot = snapshot.child("yet")
 
                         // 각 범주의 투표자 ID를 리스트로 변환합니다.
-                        val allowVotes = allowVotesSnapshot.children.mapNotNull { it.key }
-                        val disallowVotes = disallowVotesSnapshot.children.mapNotNull { it.key }
+                        val agreeVotes = agreeVotesSnapshot.children.mapNotNull { it.key }
+                        val disagreeVotes = disagreeVotesSnapshot.children.mapNotNull { it.key }
                         val yetVotes = yetVotesSnapshot.children.mapNotNull { it.key }
 
                         var agreeVoteresult : MutableList<UserProfile> = mutableListOf()
                         var disagreeVoteresult : MutableList<UserProfile> = mutableListOf()
                         var yetVoteresult : MutableList<UserProfile> = mutableListOf()
 
-                        // 'allow', 'disallow', 'yet'
-                        for (uid in allowVotes) {
+                        // 'agree', 'disagree', 'yet'
+                        for (uid in agreeVotes) {
                             val userRef = Firebase.database.getReference("moi").child(uid)
 
                             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -176,7 +176,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                                 }
                             })
                         }
-                        for (uid in disallowVotes) {
+                        for (uid in disagreeVotes) {
                             val userRef = Firebase.database.getReference("moi").child(uid)
 
                             userRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -232,14 +232,45 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
             }
             isCreate = !isCreate
         }
+        var currentUserVote: String? = null
+
+        // 사용자의 투표 상태를 확인하는 함수
+        fun updateUserVote(newVote: String) {
+
+            // "agree", "disagree", "yet" 하위 항목에서 사용자의 uid 검색 및 업데이트
+            val voteOptions = listOf("agree", "disagree", "yet")
+            for (option in voteOptions) {
+                meetingRef.child(option).child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists() && option != newVote) {
+                            // 이전 투표 항목 삭제
+                            meetingRef.child(option).child(uid).removeValue()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // 에러 처리
+                    }
+                })
+                meetingRef.child(newVote).child(uid).setValue(true)
+                currentUserVote = newVote
+            }
+
+            // 새 투표 상태 저장
+            meetingRef.child(newVote).setValue(uid)
+            currentUserVote = newVote
+        }
 
         holder.agreebtn.setOnClickListener {
-            TODO("db에 유저 추가")
+            if (currentUserVote != "agree") {
+                updateUserVote("agree")
+            }
         }
         holder.disagreebtn.setOnClickListener {
-
+            if (currentUserVote != "disagree") {
+                updateUserVote("disagree")
+            }
         }
-
     }
 
     override fun getItemCount(): Int = dataList.size

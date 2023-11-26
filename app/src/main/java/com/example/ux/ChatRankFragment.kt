@@ -59,7 +59,7 @@ class ChatRankFragment : Fragment() {
         val db = Firebase.database.getReference("chat")
 
         val meetingRef = db.child(chatId).child("meeting")
-            .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
+            .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("rank")
         meetingRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // 여기서 데이터를 처리합니다.
@@ -117,7 +117,7 @@ class ChatRankFragment : Fragment() {
                             val topItems = sortedByFrequency.filter { it.second in topFrequencies }.toMap()
 
                             topItems.forEach { (item, count) ->
-                                rankRef.child(item).child("count").setValue(count)
+                                rankRef.child("rank").child(item).child("count").setValue(count)
                             }
                         }
                     }
@@ -139,12 +139,12 @@ class ChatRankFragment : Fragment() {
 
         var tempTimeTable= mutableListOf<String>()
         val ref = db.child(member).child("timeTable").child(currentweek[0])
-            .child(currentweek[1]).child(currentweek[2])
+            .child(currentweek[1]).child(currentweek[2]).child("rank")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // 해당 요일의 모든 데이터를 가져옵니다.
                 snapshot.children.forEach { timeSnapshot ->
-                    val time = timeSnapshot.getValue(String::class.java)
+                    val time = timeSnapshot.key
                     time?.let { tempTimeTable.add(it) }
                 }
                 onTimeTablesFetched(tempTimeTable)
@@ -192,6 +192,7 @@ class ChatRankFragment : Fragment() {
                 loadDataFromFirebase(chatId!!,tempweek)
 
             }
+
         }
     }
 
