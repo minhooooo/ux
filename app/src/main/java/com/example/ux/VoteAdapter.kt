@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.model.UserProfile
@@ -35,6 +37,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         val voteChart: PieChart = view.findViewById(R.id.chart)
         val day : TextView = view.findViewById(R.id.day)
         val time : TextView = view.findViewById(R.id.time)
+        val radioGroup :RadioGroup = view.findViewById(R.id.radio_group)
         val agreebtn : RadioButton = view.findViewById(R.id.radio_agree)
         val disagreebtn : RadioButton = view.findViewById(R.id.radio_disagree)
         val dropbtn : ImageButton = view.findViewById(R.id.drop_button)
@@ -234,17 +237,40 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         }
         var currentUserVote: String? = null
 
-        // 사용자의 투표 상태를 확인하는 함수
-        fun updateUserVote(newVote: String) {
+        fun updateRadioButtonState(vote: String) {
+            when (vote) {
+                "agree" -> {
+                    holder.agreebtn.isChecked = true
+                    holder.agreebtn.buttonTintList =
+                        ContextCompat.getColorStateList(holder.agreebtn.context, R.color.bg6)
+                }
 
-            // "agree", "disagree", "yet" 하위 항목에서 사용자의 uid 검색 및 업데이트
+                "disagree" -> {
+                    holder.disagreebtn.isChecked = true
+                    holder.disagreebtn.buttonTintList =
+                        ContextCompat.getColorStateList(holder.disagreebtn.context, R.color.bg11)
+                }
+
+                "yet" -> {
+                    holder.agreebtn.isChecked = false
+                    holder.disagreebtn.isChecked = false
+                    holder.agreebtn.buttonTintList =
+                        ContextCompat.getColorStateList(holder.agreebtn.context, R.color.bg8)
+                    holder.disagreebtn.buttonTintList =
+                        ContextCompat.getColorStateList(holder.disagreebtn.context, R.color.bg8)
+                }
+            }
+        }
+
+        fun initializeCurrentUserVote() {
             val voteOptions = listOf("agree", "disagree", "yet")
             for (option in voteOptions) {
                 meetingRef.child(option).child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists() && option != newVote) {
-                            // 이전 투표 항목 삭제
-                            meetingRef.child(option).child(uid).removeValue()
+                        if (snapshot.exists()) {
+                            currentUserVote = option
+                            updateRadioButtonState(option) // 라디오 버튼 상태 업데이트
+                            return // 현재 투표 상태를 찾았으므로 반복문 종료
                         }
                     }
 
@@ -252,23 +278,40 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                         // 에러 처리
                     }
                 })
-                meetingRef.child(newVote).child(uid).setValue(true)
-                currentUserVote = newVote
+            }
+        }
+
+        // 사용자의 투표 상태를 확인하는 함수
+        fun updateUserVote(newVote: String) {
+            // 이전 투표 항목 삭제 (이미 선택된 투표가 있다면)
+            currentUserVote?.let {
+                if (it != newVote) {
+                    meetingRef.child(it).child(uid).removeValue()
+                }
             }
 
             // 새 투표 상태 저장
-            meetingRef.child(newVote).setValue(uid)
+            meetingRef.child(newVote).child(uid).setValue(true)
             currentUserVote = newVote
         }
 
-        holder.agreebtn.setOnClickListener {
-            if (currentUserVote != "agree") {
-                updateUserVote("agree")
-            }
-        }
-        holder.disagreebtn.setOnClickListener {
-            if (currentUserVote != "disagree") {
-                updateUserVote("disagree")
+        // 초기 투표 상태 설정
+        initializeCurrentUserVote()
+
+        holder.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.radio_agree -> { // '동의' 버튼 ID
+                    if (currentUserVote != "agree") {
+                        updateUserVote("agree")
+                        updateRadioButtonState("agree")
+                    }
+                }
+                R.id.radio_disagree -> { // '비동의' 버튼 ID
+                    if (currentUserVote != "disagree") {
+                        updateUserVote("disagree")
+                        updateRadioButtonState("disagree")
+                    }
+                }
             }
         }
     }
