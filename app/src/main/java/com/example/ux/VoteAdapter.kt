@@ -1,6 +1,7 @@
 package com.example.ux
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +27,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.util.concurrent.atomic.AtomicInteger
 
 
 class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<VoteAdapter.RankViewHolder>() {
-
     class RankViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val agreeRecyclerView: RecyclerView = view.findViewById(R.id.agree_recyclerView)
         val disagreeRecyclerView: RecyclerView = view.findViewById(R.id.disagree_recyclerView)
@@ -69,6 +70,10 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         val currentweek = voteData.currentweek
         val uid = voteData.userId
 
+        var agreeVoteresult : MutableList<UserProfile> = mutableListOf()
+        var disagreeVoteresult : MutableList<UserProfile> = mutableListOf()
+        var yetVoteresult : MutableList<UserProfile> = mutableListOf()
+
         val db = Firebase.database.getReference("chat")
         val meetingRef = db.child(voteData.chatId).child("meeting")
             .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("rank").child(voteData.item)
@@ -95,27 +100,23 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                 with(holder.voteChart) {
                     setUsePercentValues(true)
                     description.isEnabled = false
-                    setExtraOffsets(5f, 10f, 5f, 5f)
-                    dragDecelerationFrictionCoef = 0.95f
                     isDrawHoleEnabled = false
+                    legend.isEnabled = false
 
                     var yValues = ArrayList<PieEntry>()
                     //데이터 예시  PieEntry(40f, "Korea")
 
-                    yValues.add(PieEntry(agreecount.toFloat(), "찬성"))
-                    yValues.add(PieEntry(disagreecount.toFloat(), "반대"))
-                    yValues.add(PieEntry(yetcount.toFloat(), "미참여"))
+                    yValues.add(PieEntry(agreecount.toFloat(), ""))
+                    yValues.add(PieEntry(disagreecount.toFloat(), ""))
+                    yValues.add(PieEntry(yetcount.toFloat(), ""))
 
 
                     val dataSet = PieDataSet(yValues, "vote").apply {
-                        sliceSpace = 3f
-                        selectionShift = 5f
                         colors =  listOf(
                             Color.rgb(111, 195, 255), //찬성
                             Color.rgb(232, 136, 136), //반대
                             Color.rgb(211, 200, 207)  //미참여
                         )
-
                         setValueFormatter(object : ValueFormatter() {
                             override fun getFormattedValue(value: Float): String {
                                 return "" // 모든 값에 대해 빈 문자열 반환
@@ -141,11 +142,24 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         holder.time.setText("${starttime}시 ~ ${starttime+1}시")
 
 
-        var isCreate = true
         holder.dropbtn.setOnClickListener {
-            if (isCreate) {
+            if (voteData.isopend) {
                 holder.dropbtn.setImageResource(R.drawable.icon_droped)
                 holder.droplayout.visibility=View.VISIBLE
+                // 각 RecyclerView의 초기 어댑터 설정은 여기서 수행합니다.
+                agreeVoteresult.clear()
+                disagreeVoteresult.clear()
+                yetVoteresult.clear()
+
+                holder.agreeRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+                holder.agreeRecyclerView.adapter = UserProfileAdapter(agreeVoteresult)
+
+                holder.disagreeRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+                holder.disagreeRecyclerView.adapter = UserProfileAdapter(disagreeVoteresult)
+
+                holder.yetRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+                holder.yetRecyclerView.adapter = UserProfileAdapter(yetVoteresult)
+
                 meetingRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         // 스냅샷을 사용하여 각 투표 범주의 자식 노드를 가져옵니다.
@@ -158,72 +172,49 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                         val disagreeVotes = disagreeVotesSnapshot.children.mapNotNull { it.key }
                         val yetVotes = yetVotesSnapshot.children.mapNotNull { it.key }
 
-                        var agreeVoteresult : MutableList<UserProfile> = mutableListOf()
-                        var disagreeVoteresult : MutableList<UserProfile> = mutableListOf()
-                        var yetVoteresult : MutableList<UserProfile> = mutableListOf()
+                        val totalVotesCount = agreeVotes.size + disagreeVotes.size + yetVotes.size
+                        val loadedVotesCount = AtomicInteger(0)
+
 
                         // 'agree', 'disagree', 'yet'
-                        for (uid in agreeVotes) {
-                            val userRef = Firebase.database.getReference("moi").child(uid)
+                        fun loadUserProfile(uids: List<String>, result: MutableList<UserProfile>, onComplete: () -> Unit) {
+                            for (uid in uids) {
+                                val userRef = Firebase.database.getReference("moi").child(uid)
+                                userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val profileColor = snapshot.child("profileColor").getValue(String::class.java) ?: "bg1"
+                                        val username = snapshot.child("username").getValue(String::class.java) ?: "알 수 없는 사용자"
+                                        result.add(UserProfile(uid, profileColor, username))
 
-                            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    val profileColor = snapshot.child("profileColor").getValue(String::class.java) ?: "bg1"
-                                    val username = snapshot.child("username").getValue(String::class.java) ?: "알 수 없는 사용자"
+                                        // 모든 데이터 로드가 완료되었는지 확인합니다.
+                                        if (loadedVotesCount.incrementAndGet() == totalVotesCount) {
+                                            onComplete()
+                                        }
+                                    }
 
-                                    agreeVoteresult.add(UserProfile(uid,profileColor,username))
-                                }
-
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                    // 에러 처리
-                                }
-                            })
-                        }
-                        for (uid in disagreeVotes) {
-                            val userRef = Firebase.database.getReference("moi").child(uid)
-
-                            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    val profileColor = snapshot.child("profileColor").getValue(String::class.java) ?: "bg1"
-                                    val username = snapshot.child("username").getValue(String::class.java) ?: "알 수 없는 사용자"
-
-                                    disagreeVoteresult.add(UserProfile(uid,profileColor,username))
-                                }
-
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                    // 에러 처리
-                                }
-                            })
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                        // 에러 처리
+                                    }
+                                })
+                            }
                         }
 
-                        for (uid in yetVotes) {
-                            val userRef = Firebase.database.getReference("moi").child(uid)
-
-                            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    val profileColor = snapshot.child("profileColor").getValue(String::class.java) ?: "bg1"
-                                    val username = snapshot.child("username").getValue(String::class.java) ?: "알 수 없는 사용자"
-
-                                    yetVoteresult.add(UserProfile(uid,profileColor,username))
-                                }
-
-                                override fun onCancelled(databaseError: DatabaseError) {
-                                    // 에러 처리
-                                }
-                            })
+                        // 각 그룹의 사용자 프로필을 로드합니다.
+                        loadUserProfile(agreeVotes, agreeVoteresult) {
+                            // 모든 데이터 로드가 완료되면 RecyclerView를 업데이트합니다.
+                            holder.agreeRecyclerView.adapter?.notifyDataSetChanged()
+                            Log.d("notify","agreeVote "+agreeVoteresult.size.toString())
                         }
+                        loadUserProfile(disagreeVotes, disagreeVoteresult) {
+                            holder.disagreeRecyclerView.adapter?.notifyDataSetChanged()
+                            Log.d("notify","disagreeVote "+disagreeVoteresult.size.toString())
 
-                        // agree
-                        holder.agreeRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-                        holder.agreeRecyclerView.adapter = UserProfileAdapter(agreeVoteresult)
+                        }
+                        loadUserProfile(yetVotes, yetVoteresult) {
+                            holder.yetRecyclerView.adapter?.notifyDataSetChanged()
+                            Log.d("notify","yetVote "+yetVoteresult.size.toString())
 
-                        // disagree
-                        holder.disagreeRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-                        holder.disagreeRecyclerView.adapter = UserProfileAdapter(disagreeVoteresult)
-
-                        // yet
-                        holder.yetRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-                        holder.yetRecyclerView.adapter = UserProfileAdapter(yetVoteresult)
+                        }
                     }
                     override fun onCancelled(error: DatabaseError) {
                     }
@@ -233,7 +224,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                 holder.dropbtn.setImageResource(R.drawable.icon_dropyet)
                 holder.droplayout.visibility=View.GONE
             }
-            isCreate = !isCreate
+            voteData.isopend = !voteData.isopend
         }
         var currentUserVote: String? = null
 

@@ -17,6 +17,7 @@ class ChatMainFragment : Fragment() {
     lateinit var binding: FragmentChatMainBinding
     lateinit var mContext: Context
     private var uid: String? = null
+    private var chatId : String? = null
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -28,7 +29,8 @@ class ChatMainFragment : Fragment() {
     ): View? {
         binding = FragmentChatMainBinding.inflate(inflater, container, false)
         uid = arguments?.getString("uid")
-        Log.d("ChatMain", uid.toString())
+        chatId = arguments?.getString("chatId")
+        Log.d("ChatMain", chatId.toString())
         return binding.root
     }
 
@@ -41,6 +43,7 @@ class ChatMainFragment : Fragment() {
         val tabLayout = binding.chatTabs
         val bundle = Bundle()
         bundle.putString("uid", uid)
+        bundle.putString("chatId",chatId)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -54,12 +57,12 @@ class ChatMainFragment : Fragment() {
                         chatscheduleFragment.arguments = bundle
 
                         requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.friend_container, chatscheduleFragment).commit()
+                            .replace(R.id.chat_container, chatscheduleFragment).commit()
                     }
                     1 -> {
                         val chatrankFragment = ChatRankFragment()
                         requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.friend_container, chatrankFragment).commit()
+                            .replace(R.id.chat_container, chatrankFragment).commit()
                     }
                 }
             }
@@ -76,11 +79,13 @@ class ChatMainFragment : Fragment() {
         })
 
         // Set default fragment
-        val chatscheduleFragment = ChatScheduleFragment()
-        chatscheduleFragment.arguments = bundle
+//        val chatscheduleFragment = ChatScheduleFragment()
+//        chatscheduleFragment.arguments = bundle
+        val chatRankFragment = ChatRankFragment()
+        chatRankFragment.arguments = bundle
 
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.friend_container, chatscheduleFragment).commit()
+            .replace(R.id.chat_container, chatRankFragment).commit()
 
         tabLayout.getTabAt(0)?.icon?.setColorFilter(Color.parseColor("#002AFF"), PorterDuff.Mode.SRC_IN)
     }

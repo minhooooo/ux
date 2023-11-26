@@ -31,8 +31,18 @@ class UserProfileAdapter(private val userList: List<UserProfile>) : RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val userProfile = userList[position]
 
-        val color = Color.parseColor(userProfile.profileColor)
-        holder.profileBG.setColorFilter(color)
+        val resourceId = holder.itemView.context.resources.getIdentifier(
+            userProfile.profileColor, "drawable", holder.itemView.context.packageName
+        )
+
+        val defaultId = R.drawable.bg6
+
+        if (resourceId != 0) {
+            holder.profileBG.setImageResource(resourceId)
+        } else {
+            // 리소스 ID가 없을 경우 기본 이미지를 설정합니다.
+            holder.profileBG.setImageResource(defaultId)
+        }
         holder.profileName.setText(userProfile.username)
     }
 

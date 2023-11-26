@@ -49,6 +49,11 @@ class ChatRankFragment : Fragment() {
 
         var currentweek = week(formattedDate)
 
+        // 초기 어댑터 설정
+        val initialAdapter = VoteAdapter(allData)
+        binding.rankRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.rankRecyclerView.adapter = initialAdapter
+
         loadDataFromFirebase(chatId!!,currentweek) //db가져오기
         onUserInteractionChangedData(currentweek)
         // Firebase에서 데이터 로드
@@ -62,14 +67,18 @@ class ChatRankFragment : Fragment() {
             .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("rank")
         meetingRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // 여기서 데이터를 처리합니다.
+                allData.clear()
+
                 snapshot.children.forEach { itemSnapshot ->
                     val item = itemSnapshot.key ?: return
 
-                    allData.add(VoteData(chatId, uid!!, currentweek,item))                }
+                    allData.add(VoteData(chatId, uid!!, currentweek,item))
+                    Log.d("ADDalldata", "====")
 
-                // UI 업데이트
+                }
                 setupRecyclerView(allData)
+                Log.d("alldata", allData.size.toString())
+
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 // 에러 처리
@@ -79,33 +88,34 @@ class ChatRankFragment : Fragment() {
 
     private fun setupRecyclerView(data: List<VoteData>) {
         val adapter = VoteAdapter(data)
-        var rankrecycler = binding.root.findViewById<RecyclerView>(R.id.rank_recyclerView)
-        rankrecycler.layoutManager = LinearLayoutManager(context)
-        rankrecycler.adapter = adapter
+        binding.rankRecyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 
     private fun ButtonFromFirebase(chatId: String, currentweek:Array<String>) {
         val db = Firebase.database.getReference("chat")
+        val moidb = Firebase.database.getReference("moi")
         //채팅맴버
         val possibleRef = db.child(chatId).child("member")
-        val rankRef = db.child("chat").child(chatId).child("meeting")
+        val rankRef = db.child(chatId).child("meeting")
             .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
         rankRef.setValue(null)
         Log.d("ChatRankFragment", "initialize data")
 
         val membersListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val members = mutableListOf<String>()
+                var members = mutableListOf<String>()
                 dataSnapshot.children.forEach { memberSnapshot ->
-                    val member = memberSnapshot.getValue(String::class.java)
+                    var member = memberSnapshot.key
                     member?.let { members.add(it) }
                 }
-                val loadCount = AtomicInteger(0)
-                val allTimeTables = mutableListOf<String>()
+                Log.d("memberslistsize", members.size.toString())
+                var loadCount = AtomicInteger(0)
+                var allTimeTables = mutableListOf<String>()
 
                 // 여기서 members 리스트를 사용
                 members.forEach { member ->
-                    fetchTimeTableForMember(member, db, currentweek) { memberTimeTable ->
+                    fetchTimeTableForMember(member, moidb, currentweek) { memberTimeTable ->
                         allTimeTables.addAll(memberTimeTable)
                         if (loadCount.incrementAndGet() == members.size) {
                             // 모든 데이터 로드 완료
@@ -113,12 +123,22 @@ class ChatRankFragment : Fragment() {
                                 .eachCount()
                                 .toList()
                                 .sortedByDescending { it.second }
+                            //Log.d("sortedData", sortedByFrequency.size.toString())
+
                             val topFrequencies = sortedByFrequency.map { it.second }.distinct().take(3)
                             val topItems = sortedByFrequency.filter { it.second in topFrequencies }.toMap()
+                            //Log.d("topItems", topItems.size.toString())
 
                             topItems.forEach { (item, count) ->
                                 rankRef.child("rank").child(item).child("count").setValue(count)
+                                //Log.d("itemsave", "item save at rank")
+                                members.forEach { member ->
+                                    rankRef.child("rank").child(item).child("yet").child(member)
+                                        .setValue(true)
+                                    //Log.d("membersave", "member save at yet")
+                                }
                             }
+                            loadDataFromFirebase(chatId!!,currentweek)
                         }
                     }
                 }
@@ -138,13 +158,13 @@ class ChatRankFragment : Fragment() {
     ) {
 
         var tempTimeTable= mutableListOf<String>()
-        val ref = db.child(member).child("timeTable").child(currentweek[0])
-            .child(currentweek[1]).child(currentweek[2]).child("rank")
+        val ref = db.child(member).child("timeTable").child("possible").child(currentweek[0])
+            .child(currentweek[1]).child(currentweek[2])
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // 해당 요일의 모든 데이터를 가져옵니다.
                 snapshot.children.forEach { timeSnapshot ->
-                    val time = timeSnapshot.key
+                    val time = timeSnapshot.getValue(String::class.java)
                     time?.let { tempTimeTable.add(it) }
                 }
                 onTimeTablesFetched(tempTimeTable)
@@ -167,8 +187,6 @@ class ChatRankFragment : Fragment() {
                 nowYear.setText("${tempweek[0]}년")
                 nowWeek.setText("${tempweek[1]}월${tempweek[2]}일 ~ ${tempweek[4]}월${tempweek[5]}일")
 
-                allData.clear()
-
                 loadDataFromFirebase(chatId!!,tempweek)
             }
             nextWeek.setOnClickListener {
@@ -178,18 +196,15 @@ class ChatRankFragment : Fragment() {
                 nowYear.setText("${tempweek[0]}년")
                 nowWeek.setText("${tempweek[1]}월${tempweek[2]}일 ~ ${tempweek[4]}월${tempweek[5]}일")
 
-                allData.clear()
-
                 loadDataFromFirebase(chatId!!,tempweek)
             }
 
             create.setOnClickListener {
                 // Firebase에서 데이터 로드
-                ButtonFromFirebase(chatId!!,currentweek) //db가져오기
+                ButtonFromFirebase(chatId!!,tempweek) //db가져오기
+                Log.d("ChatRankFragment", "done initialize data")
 
-                allData.clear()
 
-                loadDataFromFirebase(chatId!!,tempweek)
 
             }
 
