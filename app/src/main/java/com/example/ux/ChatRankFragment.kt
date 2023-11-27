@@ -78,7 +78,7 @@ class ChatRankFragment : Fragment() {
 
                     val fixedRef = db.child(chatId).child("meeting")
                         .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
-                        .child("rank").child(item).child("isfixed")
+                        .child("rank").child(item).child("isChecked")
 
                     fixedRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(fixedSnapshot: DataSnapshot) {

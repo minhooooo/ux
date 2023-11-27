@@ -158,6 +158,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         }
 
         holder.checkbox.isChecked = voteData.isfixed
+        Log.d("checkbox",voteData.isfixed.toString() )
 
         holder.dropbtn.setOnClickListener {
             if (voteData.isopend) {
@@ -243,7 +244,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
             }
             voteData.isopend = !voteData.isopend
         }
-        var currentUserVote: String? = null
+        var currentUserVote = voteData.status
 
         fun updateRadioButtonState(vote: String) {
             when (vote) {
@@ -251,21 +252,25 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                     holder.agreebtn.isChecked = true
                     holder.agreebtn.buttonTintList =
                         ContextCompat.getColorStateList(holder.agreebtn.context, R.color.bg6)
+                    holder.disagreebtn.buttonTintList =
+                        ContextCompat.getColorStateList(holder.disagreebtn.context, R.color.bg11)
                 }
 
                 "disagree" -> {
                     holder.disagreebtn.isChecked = true
+                    holder.agreebtn.buttonTintList =
+                        ContextCompat.getColorStateList(holder.agreebtn.context, R.color.bg6)
                     holder.disagreebtn.buttonTintList =
                         ContextCompat.getColorStateList(holder.disagreebtn.context, R.color.bg11)
                 }
 
                 "yet" -> {
                     holder.agreebtn.isChecked = false
-                    holder.disagreebtn.isChecked = false
                     holder.agreebtn.buttonTintList =
-                        ContextCompat.getColorStateList(holder.agreebtn.context, R.color.bg8)
+                        ContextCompat.getColorStateList(holder.agreebtn.context, R.color.bg6)
+                    holder.disagreebtn.isChecked = false
                     holder.disagreebtn.buttonTintList =
-                        ContextCompat.getColorStateList(holder.disagreebtn.context, R.color.bg8)
+                        ContextCompat.getColorStateList(holder.disagreebtn.context, R.color.bg11)
                 }
             }
         }
@@ -285,21 +290,17 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
             currentUserVote = newVote
         }
 
-        updateRadioButtonState(voteData.status)
+        updateRadioButtonState(currentUserVote)
 
         holder.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.radio_agree -> { // '동의' 버튼 ID
-                    if (currentUserVote != "agree") {
-                        updateUserVote("agree")
-                        updateRadioButtonState("agree")
-                    }
+                    updateUserVote("agree")
+                    updateRadioButtonState("agree")
                 }
                 R.id.radio_disagree -> { // '비동의' 버튼 ID
-                    if (currentUserVote != "disagree") {
-                        updateUserVote("disagree")
-                        updateRadioButtonState("disagree")
-                    }
+                    updateUserVote("disagree")
+                    updateRadioButtonState("disagree")
                 }
             }
         }
