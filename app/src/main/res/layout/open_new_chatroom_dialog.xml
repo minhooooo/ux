@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/New_room_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="채팅방 개설"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:paddingBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editTxt_new_room_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="채팅방 이름을 입력하세요"
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:textColorHint="#9e9e9e" />
+</LinearLayout>

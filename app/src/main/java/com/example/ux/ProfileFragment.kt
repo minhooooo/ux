@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -25,6 +27,19 @@ class ProfileFragment : Fragment() {
     lateinit var mContext: Context
     lateinit var myUid: String
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var friendlistAdapter: FriendlistAdapter
+    private var friendList : MutableList<FriendData> = mutableListOf(
+        FriendData("상희","손시렵따리",R.drawable.bg12,"123123123"),
+        FriendData("감자","또똣따리",R.drawable.bg11,"123123123"),
+        FriendData("상희","손시렵따리",R.drawable.bg8,"123123123"),
+        FriendData("고구마","말랭이",R.drawable.bg1,"123123123"),
+        FriendData("상희","손시렵따리",R.drawable.bg3,"123123123"),
+        FriendData("감자","또똣따리",R.drawable.bg5,"123123123"),
+        FriendData("상희","손시렵따리",R.drawable.bg4,"123123123"),
+        FriendData("고구마","말랭이",R.drawable.bg9,"123123123")
+    )
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -35,6 +50,14 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        //RecyclerView 초기화
+        recyclerView = binding.profileFriendRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        friendlistAdapter = FriendlistAdapter(friendList.toTypedArray()) // Adapter 초기화
+        recyclerView.adapter = friendlistAdapter // RecyclerView에 Adapter 설정
+
+
         return binding.root
     }
 
@@ -49,6 +72,9 @@ class ProfileFragment : Fragment() {
 
         // 정보 수정 버튼 이벤트
 //        modifyInfo()
+
+        //
+
 
         //로그아웃 버튼 이벤트
 //        logoutInfo()
