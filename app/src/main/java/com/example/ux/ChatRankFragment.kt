@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.databinding.FragmentChatRankBinding
 import com.example.ux.model.VoteData
 import com.google.firebase.database.DataSnapshot
@@ -65,23 +64,66 @@ class ChatRankFragment : Fragment() {
 
         val meetingRef = db.child(chatId).child("meeting")
             .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("rank")
+        var currentUserVote: String? = null
+
         meetingRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 allData.clear()
 
+                val itemCount = snapshot.childrenCount.toInt()
+                var processedCount = 0
+
                 snapshot.children.forEach { itemSnapshot ->
                     val item = itemSnapshot.key ?: return
 
-                    allData.add(VoteData(chatId, uid!!, currentweek,item))
-                    Log.d("ADDalldata", "====")
+                    val fixedRef = db.child(chatId).child("meeting")
+                        .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
+                        .child("rank").child(item).child("isfixed")
 
+                    fixedRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(fixedSnapshot: DataSnapshot) {
+                            val isFixed = fixedSnapshot.getValue(Boolean::class.java) ?: false
+
+                            // Check for the user's vote
+                            val voteOptions = listOf("agree", "disagree", "yet")
+                            var voteCheckedCount = 0
+
+                            for (option in voteOptions) {
+                                meetingRef.child(item).child(option).child(uid!!).addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        voteCheckedCount++
+
+                                        if (snapshot.exists()) {
+                                            currentUserVote = option
+                                        }
+
+                                        // Check if all vote options are checked
+                                        if (voteCheckedCount == voteOptions.size) {
+                                            allData.add(VoteData(chatId, uid!!, currentweek, item, true, isFixed, currentUserVote.toString()))
+                                            processedCount++
+                                            Log.d("ADDalldata", "====")
+
+                                            if (processedCount == itemCount) {
+                                                setupRecyclerView(allData)
+                                                Log.d("alldata", allData.size.toString())
+                                            }
+                                        }
+                                    }
+
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                        // 에러 처리
+                                    }
+                                })
+                            }
+                        }
+
+                        override fun onCancelled(fixedError: DatabaseError) {
+                        }
+                    })
                 }
-                setupRecyclerView(allData)
-                Log.d("alldata", allData.size.toString())
-
             }
+
             override fun onCancelled(databaseError: DatabaseError) {
-                // 에러 처리
             }
         })
     }

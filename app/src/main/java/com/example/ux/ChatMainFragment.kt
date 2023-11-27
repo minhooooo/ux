@@ -5,10 +5,10 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.ux.databinding.FragmentChatMainBinding
 import com.google.android.material.tabs.TabLayout
 
@@ -55,12 +55,12 @@ class ChatMainFragment : Fragment() {
                     0 -> {
                         val chatscheduleFragment = ChatScheduleFragment()
                         chatscheduleFragment.arguments = bundle
-
                         requireActivity().supportFragmentManager.beginTransaction()
                             .replace(R.id.chat_container, chatscheduleFragment).commit()
                     }
                     1 -> {
                         val chatrankFragment = ChatRankFragment()
+                        chatrankFragment.arguments = bundle
                         requireActivity().supportFragmentManager.beginTransaction()
                             .replace(R.id.chat_container, chatrankFragment).commit()
                     }
@@ -79,13 +79,13 @@ class ChatMainFragment : Fragment() {
         })
 
         // Set default fragment
-//        val chatscheduleFragment = ChatScheduleFragment()
-//        chatscheduleFragment.arguments = bundle
-        val chatRankFragment = ChatRankFragment()
-        chatRankFragment.arguments = bundle
+        val chatscheduleFragment = ChatScheduleFragment()
+        chatscheduleFragment.arguments = bundle
+//        val chatRankFragment = ChatRankFragment()
+//        chatRankFragment.arguments = bundle
 
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.chat_container, chatRankFragment).commit()
+            .replace(R.id.chat_container, chatscheduleFragment).commit()
 
         tabLayout.getTabAt(0)?.icon?.setColorFilter(Color.parseColor("#002AFF"), PorterDuff.Mode.SRC_IN)
     }

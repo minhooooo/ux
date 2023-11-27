@@ -1,8 +1,8 @@
 package com.example.ux
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.example.ux.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -46,13 +46,13 @@ class MainActivity : AppCompatActivity() {
                             .replace(R.id.fl_container, calendarFragment).commit()
                     }
                     R.id.third -> {
-//                        val chatMainFragment = ChatMainFragment()
-//                        chatMainFragment.arguments = bundle
-//                        supportFragmentManager.beginTransaction()
-//                            .replace(R.id.fl_container, chatMainFragment).commit()
-                        val profileFragment = ProfileFragment()
+                        val chatMainFragment = ChatMainFragment()
+                        chatMainFragment.arguments = bundle
                         supportFragmentManager.beginTransaction()
-                            .replace(R.id.fl_container, profileFragment).commit()
+                            .replace(R.id.fl_container, chatMainFragment).commit()
+//                        val profileFragment = ProfileFragment()
+//                        supportFragmentManager.beginTransaction()
+//                            .replace(R.id.fl_container, profileFragment).commit()
                     }
                 }
                 true

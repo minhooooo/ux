@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -43,6 +44,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         val disagreebtn : RadioButton = view.findViewById(R.id.radio_disagree)
         val dropbtn : ImageButton = view.findViewById(R.id.drop_button)
         val droplayout : LinearLayout = view.findViewById(R.id.drop_text)
+        val checkbox : CheckBox = view.findViewById(R.id.checkbox)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RankViewHolder {
@@ -141,6 +143,21 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         holder.day.setText(koreanDayOfWeek)
         holder.time.setText("${starttime}시 ~ ${starttime+1}시")
 
+        val fixedRef = db.child(voteData.chatId).child("meeting")
+            .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
+
+        holder.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                fixedRef.child("fix").child(voteData.item).setValue(true)
+                fixedRef.child("rank").child(voteData.item).child("isChecked").setValue(true)
+            }
+            else {
+                fixedRef.child("fix").child(voteData.item).removeValue()
+                fixedRef.child("rank").child(voteData.item).child("isChecked").setValue(false)
+            }
+        }
+
+        holder.checkbox.isChecked = voteData.isfixed
 
         holder.dropbtn.setOnClickListener {
             if (voteData.isopend) {
@@ -253,24 +270,6 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
             }
         }
 
-        fun initializeCurrentUserVote() {
-            val voteOptions = listOf("agree", "disagree", "yet")
-            for (option in voteOptions) {
-                meetingRef.child(option).child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if (snapshot.exists()) {
-                            currentUserVote = option
-                            updateRadioButtonState(option) // 라디오 버튼 상태 업데이트
-                            return // 현재 투표 상태를 찾았으므로 반복문 종료
-                        }
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // 에러 처리
-                    }
-                })
-            }
-        }
 
         // 사용자의 투표 상태를 확인하는 함수
         fun updateUserVote(newVote: String) {
@@ -286,8 +285,7 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
             currentUserVote = newVote
         }
 
-        // 초기 투표 상태 설정
-        initializeCurrentUserVote()
+        updateRadioButtonState(voteData.status)
 
         holder.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {

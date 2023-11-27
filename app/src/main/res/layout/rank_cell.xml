@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/mainView"
     android:orientation="vertical">
 
@@ -11,6 +10,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="10dp">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"/>
 
         <com.github.mikephil.charting.charts.PieChart
             android:layout_gravity="fill"
@@ -24,7 +29,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="4"
             android:layout_marginStart="10dp"
             android:orientation="vertical"
             android:layout_gravity="center">
@@ -46,7 +51,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:layout_gravity="center"
             android:orientation="vertical">
             <LinearLayout
@@ -96,7 +101,7 @@
         </LinearLayout>
         <ImageButton
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:layout_height="match_parent"
             android:id="@+id/drop_button"
             android:src="@drawable/icon_dropyet"

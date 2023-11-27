@@ -1,8 +1,6 @@
 package com.example.ux
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +10,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.ux.databinding.FragmentChatScheduleBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
@@ -21,15 +22,22 @@ import java.util.Calendar
 
 
 class ChatScheduleFragment : Fragment() {
+    lateinit var mContext: Context
     private var _binding: FragmentChatScheduleBinding? = null
     private val binding get() = _binding!!
     private var chatId: String? = null
     private var uid: String? = null
     private var FixededTextViewIds: MutableList<String> = mutableListOf()
+    private var pendingColorValue: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+        pendingColorValue?.let {
+            updateUIWithColor(it)
+            pendingColorValue = null // 처리 후 null로 초기화
+        }
     }
 
     override fun onCreateView(
@@ -60,11 +68,64 @@ class ChatScheduleFragment : Fragment() {
 
 
     private fun loadDataFromFirebase(chatId: String, currentweek:Array<String>) {
+        val db = Firebase.database.getReference("chat")
+        val background = db.child(chatId).child("chatColor")
+        val fixedRef = db.child(chatId).child("meeting")
+            .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("fix")
+
+        background.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // 색상 값 가져오기
+                val colorValue = snapshot.getValue(String::class.java)
+
+                if (context != null) {
+                    if (colorValue != null) {
+                        // resId 찾기
+                        val resId = resources.getIdentifier(colorValue, "color", requireContext().packageName)
+                        // resId 사용하여 배경색 설정 등의 작업 수행
+                        fixedRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                // 데이터베이스에서 데이터를 가져왔을 때 호출됩니다.
+                                FixededTextViewIds.clear() // 기존 데이터를 지우고 새로 가져옵니다.
+
+                                for (childSnapshot in snapshot.children) {
+                                    val key = childSnapshot.key // 하위 항목의 키를 가져옵니다.
+                                    if (key != null) {
+                                        FixededTextViewIds.add(key) // 키를 리스트에 추가합니다.
+                                    }
+                                }
+
+                                updateUIWithLoadedData(resId)
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                    }
+                }
+                else {
+                    pendingColorValue = colorValue
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 에러 처리
+            }
+        })
+
 
     }
 
-    private fun updateUIWithLoadedData() {
-
+    private fun updateUIWithColor(colorValue: String) {
+        val resId = resources.getIdentifier(colorValue, "color", requireContext().packageName)
+        // 여기서 UI 업데이트 로직 수행...
+    }
+    private fun updateUIWithLoadedData(rescolor: Int) {
+        FixededTextViewIds.forEach { textViewIdName ->
+            val resId = resources.getIdentifier(textViewIdName, "id", requireContext().packageName)
+            val textView = binding.root.findViewById<TextView>(resId)
+            textView.background = ContextCompat.getDrawable(requireContext(), rescolor)
+            textView.setTag("cell_selected") // 태그 설정
+        }
     }
 
     // 사용자 인터랙션에 의한 데이터 변경
@@ -109,33 +170,8 @@ class ChatScheduleFragment : Fragment() {
 
         }
     }
-    private fun saveDataToFirebase(currentweek: Array<String>) {
 
-        if (isNetworkAvailable()) {
-            val db = Firebase.database.getReference("moi")
-            val possibleRef = db.child(uid!!).child("timeTable").child("possible")
-                .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
-            possibleRef.setValue(FixededTextViewIds)
-        } else {
-            // TODO: 네트워크가 사용 불가능할 때
-        }
-    }
 
-    // 네트워크 상태 체크
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        if (connectivityManager != null) {
-            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities != null) {
-                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
     private fun week(eventDate: String): Array<String> {
         val dateArray = eventDate.split("-").toTypedArray()
 
