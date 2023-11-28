@@ -10,11 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.ux.databinding.FragmentScheduleBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -22,19 +24,22 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.concurrent.atomic.AtomicInteger
 
 
 class ScheduleFragment : Fragment() {
+    lateinit var mContext: Context
+
     private var _binding: FragmentScheduleBinding? = null
     private val binding get() = _binding!!
     private var uid: String? = null
     private var clickedTextViewIds: MutableList<String> = mutableListOf()
+    private var fixList: MutableMap<String, Int> = mutableMapOf()
 
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -64,15 +69,94 @@ class ScheduleFragment : Fragment() {
 
     private fun loadDataFromFirebase(uid: String, currentweek:Array<String>) {
         val db = Firebase.database.getReference("moi")
+
+        val chatRoomRef = db.child(uid).child("chatRoom")
+        val chatdb = Firebase.database.getReference("chat")
+        var chatList: MutableList<String> = mutableListOf()
+
+        chatRoomRef.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach { childSnapshot ->
+                    val key = childSnapshot.key
+                    if (key != null) {
+                        Log.d("statusChatRoom",key)
+                        chatList.add(key)
+                        Log.d("statusLoadDataFromFireBase",chatList.size.toString())
+
+                    }
+                }
+                processChatList(chatList, uid, currentweek, chatdb, db)
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
+    private fun processChatList(chatList: MutableList<String>, uid: String, currentweek: Array<String>, chatdb: DatabaseReference, db: DatabaseReference) {
+        val processCount = AtomicInteger(chatList.size) // 처리할 항목 수
+
+        Log.d("statusprocessCount",processCount.toString())
+        Log.d("statuschatList",chatList.size.toString())
+
+        chatList.forEach { chatId ->
+            chatdb.child(chatId).child("chatColor")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    var chatColor: String? = null
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val chatColor = snapshot.getValue(String::class.java)
+                        if (chatColor != null) {
+                            Log.d("statuschatColor", chatColor)
+                        }
+
+                        chatColor?.let { color ->
+                            var resourceId = mContext.resources.getIdentifier(
+                                color, "color", mContext.packageName
+                            )
+                            if (resourceId == 0) {
+                                resourceId = mContext.resources.getIdentifier(
+                                    "bg6", "color", mContext.packageName
+                                )
+                            }
+                            chatdb.child(chatId).child("meeting")
+                                .child(currentweek[0]).child(currentweek[1]).child(currentweek[2]).child("fix")
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        snapshot.children.forEach { childSnapshot ->
+                                            val key = childSnapshot.key
+                                            if (key != null) {
+                                                fixList[key] = resourceId
+                                            }
+                                        }
+                                        Log.d("statusfixList",fixList.size.toString())
+
+                                        if (processCount.decrementAndGet() == 0) {
+                                            // 마지막 chatId 처리가 완료되면, clickedTextViewIds를 채움
+                                            Log.d("status",clickedTextViewIds.size.toString()+"  "+fixList.size.toString())
+                                            loadClickedTextViewIds(uid, currentweek, db)
+                                        }
+                                    }
+                                    override fun onCancelled(databaseError: DatabaseError) {
+                                        // 오류 처리
+                                    }
+                                })
+                        }
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // 오류 처리
+                    }
+                })
+        }
+    }
+    private fun loadClickedTextViewIds(uid: String, currentweek: Array<String>, db: DatabaseReference) {
         val possibleRef = db.child(uid).child("timeTable").child("possible")
             .child(currentweek[0]).child(currentweek[1]).child(currentweek[2])
 
-
         possibleRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // 데이터 로드 및 전역 변수에 저장
                 snapshot.children.forEach { childSnapshot ->
-                    childSnapshot.getValue(String::class.java)?.let {stringValue ->
+                    childSnapshot.getValue(String::class.java)?.let { stringValue ->
                         clickedTextViewIds.add(stringValue)
                     }
                 }
@@ -81,17 +165,22 @@ class ScheduleFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Firebase", "Failed to read value.", error.toException())
+                // 오류 처리
             }
         })
     }
-
     private fun updateUIWithLoadedData() {
         clickedTextViewIds.forEach { textViewIdName ->
             val resId = resources.getIdentifier(textViewIdName, "id", requireContext().packageName)
             val textView = binding.root.findViewById<TextView>(resId)
             textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_selected)
             textView.setTag("cell_selected") // 태그 설정
+        }
+        fixList.forEach { textViewIdName ->
+            val resId = resources.getIdentifier(textViewIdName.key, "id", requireContext().packageName)
+            val textView = binding.root.findViewById<TextView>(resId)
+            textView.background = ContextCompat.getDrawable(requireContext(), textViewIdName.value)
+            textView.setTag("cell_fixed") // 태그 설정
         }
     }
 
@@ -109,6 +198,13 @@ class ScheduleFragment : Fragment() {
                     textView.setTag("cell_normal") // 태그 설정
                 }
                 clickedTextViewIds.clear()
+                fixList.forEach { textViewIdName ->
+                    val resId = resources.getIdentifier(textViewIdName.key, "id", requireContext().packageName)
+                    val textView = binding.root.findViewById<TextView>(resId)
+                    textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_normal)
+                    textView.setTag("cell_normal") // 태그 설정
+                }
+                fixList.clear()
 
                 tempweek=changeweek(tempweek,-7)
 
@@ -126,6 +222,13 @@ class ScheduleFragment : Fragment() {
                     textView.setTag("cell_normal") // 태그 설정
                 }
                 clickedTextViewIds.clear()
+                fixList.forEach { textViewIdName ->
+                    val resId = resources.getIdentifier(textViewIdName.key, "id", requireContext().packageName)
+                    val textView = binding.root.findViewById<TextView>(resId)
+                    textView.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_normal)
+                    textView.setTag("cell_normal") // 태그 설정
+                }
+                fixList.clear()
 
                 tempweek=changeweek(tempweek,7)
                 // UI 업데이트
@@ -158,6 +261,9 @@ class ScheduleFragment : Fragment() {
                                         child.background = ContextCompat.getDrawable(requireContext(), R.drawable.cell_normal)
                                         child.setTag("cell_normal")
                                         clickedTextViewIds.remove(resourceName)
+                                    }
+                                    else if (child.tag?.toString() == "cell_fixed"){
+
                                     }
 
                                     else{
