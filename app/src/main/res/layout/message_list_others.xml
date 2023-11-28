@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
+
+    <FrameLayout
+        android:id="@+id/img_framelayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp">
+
+        <ImageButton
+            android:id="@+id/profile_bg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_ku"/>
+
+        <ImageButton
+            android:id="@+id/profile_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/icon_ku"/>
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textSize="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/pretendard_semibold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_message"
+        app:layout_constraintStart_toEndOf="@+id/img_framelayout"
+        app:layout_constraintTop_toTopOf="@+id/img_framelayout"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="200dp"
+        android:autoLink="web"
+        android:background="@drawable/msg_talk_others"
+        android:fontFamily="@font/pretendard_regular"
+        android:gravity="start|center_vertical"
+        android:linksClickable="true"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="@{message.content}"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="안녕하세요." />
+
+    <TextView
+        android:id="@+id/read_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/pretendard_regular"
+        android:text="1"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_date"
+        app:layout_constraintLeft_toRightOf="@+id/tv_message"
+
+        tools:ignore="TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_date"
+        setDateText="@{message.sendDate}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_message"
+        app:layout_constraintStart_toEndOf="@id/tv_message"
+        tools:ignore="TextSizeCheck"
+        tools:text="오전 10:23" />
+</androidx.constraintlayout.widget.ConstraintLayout>
