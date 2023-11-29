@@ -33,7 +33,8 @@ class ChatlistAdapter(private val items: Array<ChatlistData>) :
     }
 
 
-    class ChatlistViewHolder(private val binding: ChatlistItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ChatlistViewHolder(private val binding: ChatlistItemViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         //var textField = view.chat_title
         fun bind(listener: View.OnClickListener, item: ChatlistData) {
             binding.apply {

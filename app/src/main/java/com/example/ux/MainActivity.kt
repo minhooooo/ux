@@ -46,13 +46,13 @@ class MainActivity : AppCompatActivity() {
                             .replace(R.id.fl_container, calendarFragment).commit()
                     }
                     R.id.third -> {
-                        val chatMainFragment = ChatMainFragment()
-                        chatMainFragment.arguments = bundle
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.fl_container, chatMainFragment).commit()
-//                        val profileFragment = ProfileFragment()
+//                        val chatMainFragment = ChatMainFragment()
+//                        chatMainFragment.arguments = bundle
 //                        supportFragmentManager.beginTransaction()
-//                            .replace(R.id.fl_container, profileFragment).commit()
+//                            .replace(R.id.fl_container, chatMainFragment).commit()
+                        val profileFragment = ProfileFragment()
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.fl_container, profileFragment).commit()
                     }
                 }
                 true
