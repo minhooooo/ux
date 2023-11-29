@@ -4,14 +4,19 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ux.databinding.ChatlistItemViewBinding
 import com.example.ux.databinding.FriendItemViewBinding
+import kotlin.coroutines.coroutineContext
 
 class FriendlistAdapter(private val items: Array<FriendData>) :
     RecyclerView.Adapter<FriendlistAdapter.FriendlistViewHolder>() {
+
+    /*private lateinit var friendUnit: (FriendData)->Unit*//*constructor(items : Array<FriendData>, listener: (FriendData) -> Unit) : this(items) {
+        friendUnit = listener
+    }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendlistViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,18 +38,24 @@ class FriendlistAdapter(private val items: Array<FriendData>) :
 
     override fun getItemCount(): Int = items.size
 
-    class FriendlistViewHolder(private val binding: FriendItemViewBinding) :
+    inner class FriendlistViewHolder(private val binding: FriendItemViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: FriendData) {
             binding.apply {
                 //friendItemPictureIv.setBackgroundResource(item.imgResId)
                 val circleBackgroundDrawable = friendItemPictureIv.background as GradientDrawable
-                circleBackgroundDrawable.setColor(Color.RED)
+                circleBackgroundDrawable.setColor(Color.LTGRAY)
                 friendItemNameTv.text = item.name
                 friendItemStatusTv.text = item.statusMsg
-                root.setOnClickListener(listener)
+
+                /*friendUnit?.let {
+                        root.setOnClickListener {
+                            friendUnit?.invoke(item)
+                        }
+                    }*/
             }
         }
     }
 
 }
+

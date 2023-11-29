@@ -12,16 +12,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ux.FriendDataManager.fetchFriendDataForUser
 import com.example.ux.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ProfileFragment : Fragment() {
+    val database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     lateinit var binding: FragmentProfileBinding
     lateinit var mContext: Context
@@ -29,16 +33,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var friendlistAdapter: FriendlistAdapter
-    private var friendList : MutableList<FriendData> = mutableListOf(
-        FriendData("상희","손시렵따리",R.drawable.bg12,"123123123"),
-        FriendData("감자","또똣따리",R.drawable.bg11,"123123123"),
-        FriendData("상희","손시렵따리",R.drawable.bg8,"123123123"),
-        FriendData("고구마","말랭이",R.drawable.bg1,"123123123"),
-        FriendData("상희","손시렵따리",R.drawable.bg3,"123123123"),
-        FriendData("감자","또똣따리",R.drawable.bg5,"123123123"),
-        FriendData("상희","손시렵따리",R.drawable.bg4,"123123123"),
-        FriendData("고구마","말랭이",R.drawable.bg9,"123123123")
-    )
+    private var friendList : MutableList<FriendData> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -54,6 +49,8 @@ class ProfileFragment : Fragment() {
         //RecyclerView 초기화
         recyclerView = binding.profileFriendRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        //friendList = ProfileColorStringToInt(friendList) //bg11 -> imgResID
         friendlistAdapter = FriendlistAdapter(friendList.toTypedArray()) // Adapter 초기화
         recyclerView.adapter = friendlistAdapter // RecyclerView에 Adapter 설정
 
@@ -93,12 +90,40 @@ class ProfileFragment : Fragment() {
             val intent = Intent(requireContext(), ProfileColorActivity::class.java)
             startActivityForResult(intent, PROFILE_COLOR_REQUEST_CODE)
         }
+        fetchFriendDataAndSetAdapter()
+    }
+
+    private fun fetchFriendDataAndSetAdapter() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val friendDataList = fetchFriendDataForUser(myUid)
+                withContext(Dispatchers.Main) {
+                    friendlistAdapter = FriendlistAdapter(friendDataList.toTypedArray())
+                    recyclerView.adapter = friendlistAdapter
+                }
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Error fetching friend data: ${e.message}")
+            }
+        }
     }
 
     companion object {
         private const val PROFILE_COLOR_REQUEST_CODE = 100
         private const val PROFILE_MODIFY_REQUEST_CODE = 101
     }
+
+    //삭제?
+   /* private fun ProfileColorStringToInt(friendlist: MutableList<FriendData>): MutableList<FriendData> {
+        for (friendData in friendlist) {
+            val resourceId = mContext.resources.getIdentifier(
+                friendData.imgName, "drawable", mContext.packageName
+            )
+            resourceId?.let {
+                friendData.imgResId = it
+            }
+        }
+        return friendlist
+    }*/
 
     private fun displayProfileColor() {
         myUid = FirebaseAuth.getInstance().currentUser?.uid!!

@@ -22,4 +22,11 @@
         android:minHeight="48dp"
         android:padding="8dp"
         android:textColorHint="#9e9e9e" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/new_room_friend_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="200dp"
+        />
 </LinearLayout>
