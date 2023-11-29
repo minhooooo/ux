@@ -93,6 +93,14 @@
                 android:layout_marginRight="25dp"
                 android:src="@drawable/line_gray" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profile_friend_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="220dp"
+                android:layout_marginBottom="80dp"
+
+                />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/logoutBtn"
@@ -123,6 +131,7 @@
                 android:textSize="15dp"
                 android:fontFamily="@font/pretendard_semibold"
                 android:textColor="@color/black" />
+
         </FrameLayout>
     </ScrollView>
 </FrameLayout>
