@@ -90,6 +90,7 @@ class RecyclerMessagesAdapter(
         RecyclerView.ViewHolder(itemView.root) {
         var background = itemView.background
         var txtName = itemView.tvName
+        var txtColor = itemView.profileBg
         var txtMessage = itemView.tvMessage
         var txtDate = itemView.tvDate
         var txtIsShown = itemView.txtIsShown
@@ -106,6 +107,12 @@ class RecyclerMessagesAdapter(
                     if (snapshot.exists()) {
                         val username = snapshot.child("username").value.toString()
                         txtName.text = username
+
+                        val bgColor = snapshot.child("profileColor").value.toString()
+
+                        // bgColor를 기반으로 리소스 ID 동적으로 생성
+                        val resourceId = context.resources.getIdentifier(bgColor, "drawable", context.packageName)
+                        txtColor.setBackgroundResource(resourceId)
                     }
                 }
 
