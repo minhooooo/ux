@@ -14,48 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="73dp"
-            android:layout_marginBottom="3dp"
-            android:background="@drawable/shadow"
-            android:elevation="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/divider_left"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <LinearLayout
-                android:id="@+id/setBobAppointment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="15dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/icon_addschedule" />
-
-                <TextView
-                    android:id="@+id/notice_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="5"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="left"
-                    android:text="회의 일정"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
-            </LinearLayout>
-        </FrameLayout>
-
         <TextView
-            android:id="@+id/chatRoomName"
+            android:id="@+id/txt_TItle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -68,27 +28,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/backBtn"
+            android:id="@+id/imgbtn_quit"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
             android:background="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/chatRoomName"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_TItle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chatRoomName"
+            app:layout_constraintTop_toTopOf="@+id/txt_TItle"
             app:srcCompat="@drawable/left_arrow_line" />
 
-        <ImageButton
+        <Button
             android:id="@+id/chatroom_menu"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="25dp"
+            android:text="스케줄"
+            android:fontFamily="@font/pretendard_semibold"
             android:background="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/chatRoomName"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_TItle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chatRoomName"
-            app:srcCompat="@drawable/round_menu" />
+            app:layout_constraintTop_toTopOf="@+id/txt_TItle" />
 
         <TextView
             android:id="@+id/textView2"
@@ -99,7 +60,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toStartOf="@+id/divider_right"
             app:layout_constraintStart_toEndOf="@+id/divider_left"
-            app:layout_constraintTop_toBottomOf="@+id/chatRoomName" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_TItle" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/divider_right"
@@ -121,17 +82,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout"></androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--android:background="#B6B6B6"-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/message_box"
+            android:id="@+id/edt_message"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/send_msg"
+            app:layout_constraintEnd_toStartOf="@+id/btn_submit"
             app:layout_constraintHeight_percent="0.1"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -153,7 +114,7 @@
             android:textColor="@color/black"
             android:textSize="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/send_msg"
+            app:layout_constraintEnd_toStartOf="@+id/btn_submit"
             app:layout_constraintHeight_percent="0.1"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -167,7 +128,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
-            android:id="@+id/send_msg"
+            android:id="@+id/btn_submit"
             android:layout_width="70dp"
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
@@ -184,48 +145,15 @@
             app:layout_constraintTop_toTopOf="@+id/message" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatRecyclerView"
+            android:id="@+id/recycler_messages"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/message_box"
+            app:layout_constraintBottom_toTopOf="@+id/edt_message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+            app:layout_constraintTop_toBottomOf="@+id/chatroom_menu"
             tools:listitem="@layout/message_list_mine" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--메뉴-->
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:background="@color/white"
-        android:orientation="vertical"
-        >
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/menu_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/line_gray"/>
-
-        <LinearLayout
-            android:id="@+id/menu_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/exit_btn"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/room_exit"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="15dp"/>
-        </LinearLayout>
-    </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
