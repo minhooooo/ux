@@ -89,6 +89,7 @@ class RecyclerMessagesAdapter(
     inner class OtherMessageViewHolder(itemView: MessageListOthersBinding) :         //상대 메시지 뷰홀더
         RecyclerView.ViewHolder(itemView.root) {
         var background = itemView.background
+        var txtName = itemView.tvName
         var txtMessage = itemView.tvMessage
         var txtDate = itemView.tvDate
         var txtIsShown = itemView.txtIsShown
@@ -97,11 +98,26 @@ class RecyclerMessagesAdapter(
             var message = messages[position]
             var sendDate = message.sended_date
 
-            txtMessage.text = message.content
+            val opponentReference = FirebaseDatabase.getInstance().getReference("moi")
+                .child(message.senderUid)
 
+            opponentReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val username = snapshot.child("username").value.toString()
+                        txtName.text = username
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("OtherMessageViewHolder", "Error fetching opponent username: ${error.message}")
+                }
+            })
+
+            txtMessage.text = message.content
             txtDate.text = getDateText(sendDate)
 
-            if (message.confirmed.equals(true))           //확인 여부 표시
+            if (message.confirmed == true)           //확인 여부 표시
                 txtIsShown.visibility = View.GONE
             else
                 txtIsShown.visibility = View.VISIBLE
