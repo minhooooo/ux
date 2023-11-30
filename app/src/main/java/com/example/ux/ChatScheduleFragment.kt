@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.ux.databinding.FragmentChatScheduleBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -46,7 +47,7 @@ class ChatScheduleFragment : Fragment() {
     ): View? {
         _binding = FragmentChatScheduleBinding.inflate(inflater, container, false)
         chatId = arguments?.getString("chatId")
-        uid = arguments?.getString("uid")
+        uid = FirebaseAuth.getInstance().currentUser?.uid!!
         Log.d("schedule", chatId.toString())
 
         var currentTime = LocalDateTime.now();
