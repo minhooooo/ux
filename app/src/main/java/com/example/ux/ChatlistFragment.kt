@@ -20,7 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import java.util.*
 
 
 class ChatlistFragment : Fragment() {
@@ -127,6 +127,9 @@ class ChatlistFragment : Fragment() {
                 }
             }
 
+            val randomBackgroundColor = getRandomBackgroundColor()
+            chatRef.child("chatColor").setValue(randomBackgroundColor)
+
             val chatroomRef = database.child("moi").child(myUid).child("chatRoom")
             chatroomRef.child(roomName).setValue(true)
 
@@ -135,5 +138,18 @@ class ChatlistFragment : Fragment() {
             // 방을 업로드한 후 방 목록을 다시 불러옴
             (recycler_chatroom.adapter as? RecyclerChatRoomsAdapter)?.setupAllUserList()
         }
+    }
+
+    private fun getRandomBackgroundColor(): String {
+        val backgroundColors = listOf(
+            "bg1", "bg2", "bg3", "bg4", "bg5",
+            "bg6", "bg7", "bg8", "bg9", "bg10",
+            "bg11", "bg12"
+        )
+
+        val random = Random()
+        val randomIndex = random.nextInt(backgroundColors.size)
+
+        return backgroundColors[randomIndex]
     }
 }
