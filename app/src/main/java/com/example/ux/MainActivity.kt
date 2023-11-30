@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
                             .replace(R.id.fl_container, chatlistFragment).commit()
                     }
                     R.id.second -> {
-                        val calendarFragment = CalendarFragment()
-                        calendarFragment.arguments = bundle
+                        val scheduleFragment = ScheduleFragment()
+                        scheduleFragment.arguments = bundle
                         supportFragmentManager.beginTransaction()
-                            .replace(R.id.fl_container, calendarFragment).commit()
+                            .replace(R.id.fl_container, scheduleFragment).commit()
                     }
                     R.id.third -> {
 //                        val chatMainFragment = ChatMainFragment()

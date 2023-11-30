@@ -10,31 +10,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/content_search"
-            android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:background="@drawable/btn_search"
-            android:ems="10"
-            android:hint="채팅방 검색"
-            android:textSize="15sp"
-            android:lines="1"
-            android:drawableStart="@drawable/magnifier"
-            android:drawablePadding="10dp"
-            android:fontFamily="@font/pretendard_semibold"
-            android:textColorHint="#737373"
-            android:paddingLeft="15dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:orientation="vertical">
 

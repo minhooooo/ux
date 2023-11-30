@@ -102,35 +102,7 @@
 
                 />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/logoutBtn"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
-                android:layout_marginTop="560dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/btn_blue"
-                android:text="로그아웃"
-                android:textSize="15dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:textColor="@color/white" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/userDeleteBtn"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
-                android:layout_marginTop="620dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/btn_blue"
-                android:backgroundTint="@color/white"
-                android:elevation="5dp"
-                android:text="탈퇴하기"
-                android:textSize="15dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:textColor="@color/black" />
 
         </FrameLayout>
     </ScrollView>
