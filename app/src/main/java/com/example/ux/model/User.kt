@@ -1,3 +1,12 @@
 package com.example.ux.model
 
-data class User(val uid:String, val username:String, val university:String, val major:String, val profileColor:String)
+import java.io.Serializable
+
+data class User(
+    var uid: String? = "",
+    var username: String? = "",
+    var email: String? = "",
+    var profileImageUrl: String? = "",
+    var status: String? = ""
+) : Serializable {
+}
