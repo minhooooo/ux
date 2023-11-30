@@ -119,14 +119,18 @@ class ChatlistFragment : Fragment() {
             val chatRef = database.child("chat").child(roomName)
             chatRef.child("chatColor").setValue("bg2")
             chatRef.child("chatName").setValue(roomName)
+
             val membersRef = chatRef.child("member")
             for (member in newChatMembers) {
                 member.uid?.let {uid ->
                     membersRef.child(uid).setValue(true)
                 }
             }
+
+            val chatroomRef = database.child("moi").child(myUid).child("chatRoom")
+            chatroomRef.child(roomName).setValue(true)
+
             Log.d("ChatlistFragment", "Selected chat members uploaded to Firebase")
-            println("firebase uploaded - chat members")
 
             // 방을 업로드한 후 방 목록을 다시 불러옴
             (recycler_chatroom.adapter as? RecyclerChatRoomsAdapter)?.setupAllUserList()
