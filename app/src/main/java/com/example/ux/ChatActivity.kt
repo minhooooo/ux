@@ -43,6 +43,16 @@ class ChatActivity : AppCompatActivity() {
         initializeView()
         initializeListener()
         setupChatRooms()
+        moveSchedule()
+    }
+
+    private fun moveSchedule() {
+        binding.chatroomMenu.setOnClickListener {
+//            val intent = Intent(this@ChatActivity, ChatMainActivity::class.java)
+//
+//            intent.putExtra("chatName", chatRoom.chatName)
+//            startActivity(intent)
+        }
     }
 
     private fun initializeProperty() {  //변수 초기화
