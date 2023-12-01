@@ -1,13 +1,12 @@
 package com.example.ux
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.databinding.ActivityChatBinding
@@ -15,10 +14,14 @@ import com.example.ux.model.ChatRoom
 import com.example.ux.model.Message
 import com.example.ux.model.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.TimeZone
 
 class ChatActivity : AppCompatActivity() {
 
@@ -43,6 +46,16 @@ class ChatActivity : AppCompatActivity() {
         initializeView()
         initializeListener()
         setupChatRooms()
+        moveSchedule()
+    }
+
+    private fun moveSchedule() {
+        binding.chatroomMenu.setOnClickListener {
+            val intent = Intent(this@ChatActivity, ChatMainActivity::class.java)
+
+            intent.putExtra("chatId", chatRoom.chatName)
+            startActivity(intent)
+        }
     }
 
     private fun initializeProperty() {  //변수 초기화

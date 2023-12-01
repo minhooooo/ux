@@ -91,6 +91,12 @@ class RecyclerChatRoomsAdapter(val context: Context) :
                 holder.txt_name.text = chatRooms[position].chatName
             }
 
+            if (chatRooms[position].chatColor!!.isNotEmpty()) {
+                // chatColor 기반으로 리소스 ID 동적으로 생성
+                val resourceId = context.resources.getIdentifier(chatRooms[position].chatColor, "drawable", context.packageName)
+                holder.chatroomIcon.setBackgroundResource(resourceId)
+            }
+
             if (chatRooms[position].messages!!.isNotEmpty()) {         //채팅방 메시지가 존재하는 경우
                 setupLastMessageAndDate(holder, position)        //마지막 메시지 및 시각 초기화
                 setupMessageCount(holder, position)
@@ -184,6 +190,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         var opponentUser = User("", "", "", "", "")
         var chatRoomKey = ""
         var background = itemView.background
+        var chatroomIcon = itemView.chatroomIcon
         var txt_name = itemView.txtChatlistRoomTitle
         var txt_message = itemView.txtChatlistLastMsg
 //        var txt_date = itemView.txtMessageDate

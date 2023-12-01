@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ux.databinding.FragmentChatRankBinding
 import com.example.ux.model.VoteData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -26,7 +27,7 @@ class ChatRankFragment : Fragment() {
     private var _binding: FragmentChatRankBinding? = null
     private val binding get() = _binding!!
     private var chatId: String? = null
-    private var uid: String? = null
+    private var uid = FirebaseAuth.getInstance().currentUser?.uid!!
     private var allData : MutableList<VoteData> = mutableListOf()
 
     override fun onCreateView(
@@ -35,7 +36,6 @@ class ChatRankFragment : Fragment() {
     ): View? {
         _binding = FragmentChatRankBinding.inflate(inflater, container, false)
         chatId = arguments?.getString("chatId")
-        uid = arguments?.getString("uid")
 
         Log.d("chatrank", chatId.toString())
 
