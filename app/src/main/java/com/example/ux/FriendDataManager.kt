@@ -32,12 +32,18 @@ object FriendDataManager {
                                     val statusMsg = snapshot.child("statusMsg").value.toString()
                                     val profileColor = snapshot.child("profileColor").value.toString()
 
-                                    val friendData = FriendData(name, statusMsg, profileColor, null,friendInfoSnapshot.key ?: "")
-                                    friendDataList.add(friendData)
+                                    if (!name.equals("null")){
+                                        val friendData = FriendData(name, statusMsg, profileColor, null,friendInfoSnapshot.key ?: "")
+                                        friendDataList.add(friendData)
+                                        System.out.println("name : "+name)
 
-                                    if (friendDataList.size == friendInfoSnapshots.size) {
+                                        if (friendDataList.size == friendInfoSnapshots.size) {
+                                            continuation.resume(friendDataList)
+                                        }
+                                    } else {
                                         continuation.resume(friendDataList)
                                     }
+
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {
