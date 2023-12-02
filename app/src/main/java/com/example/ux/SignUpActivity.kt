@@ -129,13 +129,29 @@ class SignUpActivity : AppCompatActivity() {
                             userEntry.setValue(user).addOnCompleteListener { userEntryTask ->
                                 if (userEntryTask.isSuccessful) {
                                     // 친구 폴더 생성
-                                    userEntry.child("friend").setValue("")
+                                    //userEntry.child("friend").child("").setValue(false)
+                                    val friendNode = userEntry.child("friend")
+                                    friendNode.child("placeholder").setValue(false)
+                                       /* .addOnCompleteListener { friendNodeTask ->
+                                            if (friendNodeTask.isSuccessful) {
+
+                                                // 나머지 코드...
+                                                // ...
+                                            } else {
+                                                // 친구 폴더 생성 실패
+                                                Toast.makeText(this@SignUpActivity, "친구 폴더 생성 실패", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }*/
 
                                     // 채팅방 폴더 생성
                                     userEntry.child("chatRoom").setValue("")
 
                                     // 시간표 폴더 생성
                                     userEntry.child("timeTable").child("possible").setValue("")
+
+                                    //이메일 추가
+                                    userEntry.child("email").setValue(id)
+
 
                                     // 데이터베이스에 캘린더 정보 추가 성공
                                     val year = "2023" // 예시로 고정된 연도

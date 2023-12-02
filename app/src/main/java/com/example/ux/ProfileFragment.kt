@@ -1,6 +1,7 @@
 package com.example.ux
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,15 +10,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.FriendDataManager.fetchFriendDataForUser
 import com.example.ux.databinding.FragmentProfileBinding
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.protobuf.Value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,10 +35,11 @@ class ProfileFragment : Fragment() {
     lateinit var binding: FragmentProfileBinding
     lateinit var mContext: Context
     lateinit var myUid: String
+    lateinit var auth: FirebaseAuth
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var friendlistAdapter: FriendlistAdapter
-    private var friendList : MutableList<FriendData> = mutableListOf()
+    private var friendList: MutableList<FriendData> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -90,13 +96,183 @@ class ProfileFragment : Fragment() {
             val intent = Intent(requireContext(), ProfileColorActivity::class.java)
             startActivityForResult(intent, PROFILE_COLOR_REQUEST_CODE)
         }
+
+        // 친구 추가 버튼 클릭 이벤트 처리
+        binding.addFriendBtn.setOnClickListener {
+            openAddFriendDialog()
+        }
+
+
         fetchFriendDataAndSetAdapter()
     }
+
+    private fun openAddFriendDialog() {
+
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = requireActivity().layoutInflater
+        val dialogView = inflater.inflate(R.layout.add_friend_dialog, null)
+        builder.setView(dialogView)
+
+        val editTextFriendName = dialogView.findViewById<EditText>(R.id.editTxt_add_friend_email)
+
+        builder.setPositiveButton("추가") { dialog, _ ->
+            val friendEmail = editTextFriendName.text.toString().trim()
+            val usersRef = database.child("moi")
+            val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+            val currentUserFriendRef =
+                database.child("moi").child(currentUserUid ?: "").child("friend")
+
+            var friendUid = ""
+            var isEmailRegistered = false
+
+            // 입력한 이메일이 존재하는 이메일인지 확인
+            usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    for (userSnapshot in dataSnapshot.children) {
+                        val uid = userSnapshot.key // 사용자 uid
+                        val email =
+                            userSnapshot.child("email").getValue(String::class.java) // 사용자 이메일
+
+                        if (friendEmail == email) {
+                            // 사용자 이메일이 존재하는 경우
+                            friendUid = uid!!
+                            isEmailRegistered = true
+
+                            // 현재 사용자의 친구 목록에 추가된 친구가 있는지 확인
+                            currentUserFriendRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    val value = snapshot.getValue<Map<String, Boolean>>()
+
+                                    if (value != null && value.containsKey(friendUid)) {
+                                        // 이미 친구 목록에 존재하는 경우
+                                        System.out.println("이미 추가된 친구")
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "이미 추가된 친구입니다",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        // 친구가 아직 추가되지 않은 경우
+                                        addFriendToFirebase(friendUid)
+                                    }
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    TODO("Not yet implemented")
+                                }
+                            })
+
+
+
+                            break
+                        }
+                    }
+
+                    if (!isEmailRegistered) {
+                        // 가입된 이메일이 아닌 경우
+                        System.out.println("가입된 이메일이 아님")
+                        Toast.makeText(
+                            requireContext(),
+                            "가입된 이메일이 아닙니다",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    val errorMessage = error.message
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Database Error: $errorMessage",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e("ProfileFragment", "Database Error: $errorMessage")
+
+                }
+            })
+
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("취소") { dialog, _ ->
+            dialog.cancel()
+        }
+
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
+
+    private fun addFriendToFirebase(friendUid: String) {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        val databaseRef = FirebaseDatabase.getInstance().reference.child("moi")
+
+        val newFriendNameRef = databaseRef.child(friendUid).child("username")
+
+
+        newFriendNameRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val newFriendName = snapshot.getValue(String::class.java)
+
+                if (newFriendName != null){
+                    //현재 사용자의 friend 노드에 친구 추가
+                    val currentUserFriendRef = databaseRef.child(currentUserUid ?: "").child("friend")
+                    currentUserFriendRef.child(friendUid).setValue(true)
+                        .addOnSuccessListener {
+                            val newFriendStatusMsg = "status msg" //상태메시지 삭제???
+
+                            // 친구 정보를 friendList에 추가하고 RecyclerView 갱신
+                            val newFriend = FriendData(newFriendName,newFriendStatusMsg,"bg11",R.drawable.bg11,friendUid)
+                            friendList.add(newFriend)
+
+                            // RecyclerView 어댑터에 변경된 데이ㅂ터를 알림
+                            friendlistAdapter = FriendlistAdapter(friendList.toTypedArray())
+                            recyclerView.adapter = friendlistAdapter
+                            friendlistAdapter.notifyDataSetChanged()
+
+                            System.out.println("친구 추가 성공")
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(
+                                requireContext(),
+                                "친구 추가 실패: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            System.out.println("친구 추가 실패")
+                        }
+
+                    // 친구의 friend 노드에 현재 사용자 추가
+                    val friendRef = databaseRef.child(friendUid).child("friend")
+                    friendRef.child(currentUserUid ?: "").setValue(true)
+                        .addOnSuccessListener {
+
+                            System.out.println("친구에게 나 추가 성공")
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(
+                                requireContext(),
+                                "친구 정보 업데이트 실패: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                } else {
+                    Toast.makeText(requireContext(), "친구 추가 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
 
     private fun fetchFriendDataAndSetAdapter() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val friendDataList = fetchFriendDataForUser(myUid)
+                friendList = friendDataList as MutableList<FriendData>
                 withContext(Dispatchers.Main) {
                     friendlistAdapter = FriendlistAdapter(friendDataList.toTypedArray())
                     recyclerView.adapter = friendlistAdapter
@@ -107,23 +283,24 @@ class ProfileFragment : Fragment() {
         }
     }
 
+
     companion object {
         private const val PROFILE_COLOR_REQUEST_CODE = 100
         private const val PROFILE_MODIFY_REQUEST_CODE = 101
     }
 
     //삭제?
-   /* private fun ProfileColorStringToInt(friendlist: MutableList<FriendData>): MutableList<FriendData> {
-        for (friendData in friendlist) {
-            val resourceId = mContext.resources.getIdentifier(
-                friendData.imgName, "drawable", mContext.packageName
-            )
-            resourceId?.let {
-                friendData.imgResId = it
-            }
-        }
-        return friendlist
-    }*/
+    /* private fun ProfileColorStringToInt(friendlist: MutableList<FriendData>): MutableList<FriendData> {
+         for (friendData in friendlist) {
+             val resourceId = mContext.resources.getIdentifier(
+                 friendData.imgName, "drawable", mContext.packageName
+             )
+             resourceId?.let {
+                 friendData.imgResId = it
+             }
+         }
+         return friendlist
+     }*/
 
     private fun displayProfileColor() {
         myUid = FirebaseAuth.getInstance().currentUser?.uid!!
@@ -170,12 +347,18 @@ class ProfileFragment : Fragment() {
             // 사용자 배경색 정보 가져와서 화면에 설정
             displayProfileColor()
             val selectedItemId = data?.getIntExtra("selectedItemId", R.id.third)
-            activity?.setResult(Activity.RESULT_OK, Intent().putExtra("selectedItemId", selectedItemId))
+            activity?.setResult(
+                Activity.RESULT_OK,
+                Intent().putExtra("selectedItemId", selectedItemId)
+            )
         } else if ((requestCode == PROFILE_MODIFY_REQUEST_CODE && resultCode == Activity.RESULT_OK)) {
             // 사용자 닉네임 정보 가져와서 화면에 설정
 //            displayInfo()
             val selectedItemId = data?.getIntExtra("selectedItemId", R.id.third)
-            activity?.setResult(Activity.RESULT_OK, Intent().putExtra("selectedItemId", selectedItemId))
+            activity?.setResult(
+                Activity.RESULT_OK,
+                Intent().putExtra("selectedItemId", selectedItemId)
+            )
         }
     }
 }
