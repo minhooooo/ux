@@ -272,6 +272,7 @@ class ProfileFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val friendDataList = fetchFriendDataForUser(myUid)
+                System.out.println("friendDatalist : "+friendDataList)
                 friendList = friendDataList as MutableList<FriendData>
                 withContext(Dispatchers.Main) {
                     friendlistAdapter = FriendlistAdapter(friendDataList.toTypedArray())
