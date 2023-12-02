@@ -28,22 +28,24 @@ object FriendDataManager {
                         friendInfoSnapshots.forEach { friendInfoSnapshot ->
                             friendInfoSnapshot.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
-                                    val name = snapshot.child("username").value.toString()
-                                    val statusMsg = snapshot.child("statusMsg").value.toString()
-                                    val profileColor = snapshot.child("profileColor").value.toString()
+                                    val friendUid = snapshot.key
+                                    if (friendUid!="placeholder"){
+                                        val name = snapshot.child("username").value.toString()
+                                        val statusMsg = snapshot.child("statusMsg").value.toString()
+                                        val profileColor = snapshot.child("profileColor").value.toString()
 
-                                    if (!name.equals("null")){
-                                        val friendData = FriendData(name, statusMsg, profileColor, null,friendInfoSnapshot.key ?: "")
-                                        friendDataList.add(friendData)
-                                        System.out.println("name : "+name)
-
-                                        if (friendDataList.size == friendInfoSnapshots.size) {
-                                            continuation.resume(friendDataList)
+                                        if (!name.equals("null")){
+                                            val friendData = FriendData(name, statusMsg, profileColor, null,friendInfoSnapshot.key ?: "")
+                                            friendDataList.add(friendData)
+                                            System.out.println("name : "+name)
+                                        } else {
+                                            System.out.println("placeholder : "+name)
                                         }
-                                    } else {
+                                    }
+                                    if (friendDataList.size == friendInfoSnapshots.size-1) {
+                                        System.out.println(friendDataList)
                                         continuation.resume(friendDataList)
                                     }
-
                                 }
 
                                 override fun onCancelled(error: DatabaseError) {

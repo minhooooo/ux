@@ -81,6 +81,7 @@ class ChatlistFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val fetchedFriendList = FriendDataManager.fetchFriendDataForUser(myUid)
+                System.out.println("fetched friend list = " + fetchedFriendList)
                 withContext(Dispatchers.Main) {
                     val chatParticipantAdapter =
                         ChatParticipantAdapter(fetchedFriendList.toTypedArray())
