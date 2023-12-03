@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ux.databinding.DateMsgBinding
 import com.example.ux.databinding.MessageListMineBinding
 import com.example.ux.databinding.MessageListOthersBinding
 import com.example.ux.model.Message
@@ -15,6 +16,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RecyclerMessagesAdapter(
     val context: Context,
@@ -71,11 +74,22 @@ class RecyclerMessagesAdapter(
                         .inflate(R.layout.message_list_others, parent, false)  //상대 메시지 레이아웃으로 초기화
                 OtherMessageViewHolder(MessageListOthersBinding.bind(view))
             }
+//            2 -> {      //메시지가 상대 메시지인 경우
+//                val view =
+//                    LayoutInflater.from(context)
+//                        .inflate(R.layout.message_list_others, parent, false)  //상대 메시지 레이아웃으로 초기화
+//                OtherMessageViewHolder(MessageListOthersBinding.bind(view))
+//            } else -> {
+//                val view =
+//                    LayoutInflater.from(parent.context)
+//                        .inflate(R.layout.date_msg, parent, false)
+//                DatePrintViewHolder(DateMsgBinding.bind(view))
+//            }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (messages[position].senderUid.equals(myUid)) {       //레이아웃 항목 초기화
+        if (messages[position].senderUid == myUid) {       //레이아웃 항목 초기화
             (holder as MyMessageViewHolder).bind(position)
         } else {
             (holder as OtherMessageViewHolder).bind(position)
@@ -124,10 +138,12 @@ class RecyclerMessagesAdapter(
             txtMessage.text = message.content
             txtDate.text = getDateText(sendDate)
 
-            if (message.confirmed == true)           //확인 여부 표시
+            if (message.confirmed) {
                 txtIsShown.visibility = View.GONE
-            else
-                txtIsShown.visibility = View.VISIBLE
+            } else {
+                txtIsShown.visibility = View.GONE
+//                txtIsShown.visibility = View.VISIBLE
+            }
 
             setShown(position)             //해당 메시지 확인하여 서버로 전송
         }
@@ -178,10 +194,12 @@ class RecyclerMessagesAdapter(
 
             txtDate.text = getDateText(sendDate)
 
-            if (message.confirmed.equals(true))
+            if (message.confirmed) {
                 txtIsShown.visibility = View.GONE
-            else
-                txtIsShown.visibility = View.VISIBLE
+            } else {
+                txtIsShown.visibility = View.GONE
+//                txtIsShown.visibility = View.VISIBLE
+            }
         }
 
         fun getDateText(sendDate: String): String {        //메시지 전송 시각 생성
@@ -206,4 +224,38 @@ class RecyclerMessagesAdapter(
         }
     }
 
+    inner class DatePrintViewHolder(itemView: DateMsgBinding) :
+        RecyclerView.ViewHolder(itemView.root){
+        private val dateTextView = itemView.dateMsg
+
+        fun bind(position: Int){
+            val dateString = messages[position].sended_date ?: ""
+
+            // 날짜 형식: "yyyyMMddHHmmss"
+            val year = dateString.substring(0, 4)
+            val month = dateString.substring(4, 6)
+            val day = dateString.substring(6, 8)
+
+            // 시간 형식: "HHmmss"
+            // 시, 분, 초는 필요하지 않기 때문에 추출하지 않음
+
+            // Calendar 객체를 사용하여 요일 계산
+            val calendar = Calendar.getInstance()
+            calendar.set(year.toInt(), month.toInt() - 1, day.toInt()) // 월은 0부터 시작하므로 -1
+
+            val dayOfWeek = when (calendar.get(Calendar.DAY_OF_WEEK)) {
+                Calendar.SUNDAY -> "일요일"
+                Calendar.MONDAY -> "월요일"
+                Calendar.TUESDAY -> "화요일"
+                Calendar.WEDNESDAY -> "수요일"
+                Calendar.THURSDAY -> "목요일"
+                Calendar.FRIDAY -> "금요일"
+                Calendar.SATURDAY -> "토요일"
+                else -> ""
+            }
+
+            val dateText = "${year}년 ${month}월 ${day}일 ${dayOfWeek}"
+            dateTextView.text = dateText
+        }
+    }
 }
