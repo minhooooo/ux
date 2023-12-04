@@ -118,7 +118,6 @@ class ChatlistFragment : Fragment() {
     private fun uploadNewChatMembers(newChatMembers: List<FriendData>, roomName: String) {
         myUid?.let {
             val chatRef = database.child("chat").child(roomName)
-            chatRef.child("chatColor").setValue("bg2")
             chatRef.child("chatName").setValue(roomName)
 
             val membersRef = chatRef.child("member")
@@ -143,9 +142,14 @@ class ChatlistFragment : Fragment() {
 
     private fun getRandomBackgroundColor(): String {
         val backgroundColors = listOf(
-            "bg1", "bg2", "bg3", "bg4", "bg5",
-            "bg6", "bg7", "bg8", "bg9", "bg10",
-            "bg11", "bg12"
+            "chat1", "chat2", "chat3", "chat4", "chat5",
+            "chat6", "chat7", "chat8", "chat9", "chat10",
+            "chat11", "chat12", "chat13", "chat14", "chat15",
+            "chat16", "chat17", "chat18", "chat19", "chat20",
+            "chat21", "chat22", "chat23", "chat24", "chat25",
+            "chat26", "chat27", "chat28", "chat29", "chat30",
+            "chat31", "chat32", "chat33", "chat34", "chat35",
+            "chat36"
         )
 
         val random = Random()

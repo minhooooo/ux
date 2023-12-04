@@ -26,6 +26,44 @@
     <color name="bg11">#FFFF8A8A</color>
     <color name="bg12">#FF6EB279</color>
 
+    <!-- 채팅방 배경색 리스트 -->
+    <color name="chat1">#FFFFD1DC</color>
+    <color name="chat2">#FFFFB6C1</color>
+    <color name="chat3">#FFFFDEAD</color>
+    <color name="chat4">#FFFFE4E1</color>
+    <color name="chat5">#FF87CEEB</color>
+    <color name="chat6">#FFAFEEEE</color>
+    <color name="chat7">#FF98FB98</color>
+    <color name="chat8">#FFFFD700</color>
+    <color name="chat9">#FFFF6347</color>
+    <color name="chat10">#FFDDA0DD</color>
+    <color name="chat11">#FFF0E68C</color>
+    <color name="chat12">#FF00FA9A</color>
+    <color name="chat13">#FFADD8E6</color>
+    <color name="chat14">#FFFFEFD5</color>
+    <color name="chat15">#FF87CEFA</color>
+    <color name="chat16">#FFF08080</color>
+    <color name="chat17">#FFFFA07A</color>
+    <color name="chat18">#FF00FF7F</color>
+    <color name="chat19">#FFF0FFF0</color>
+    <color name="chat20">#FFBA55D3</color>
+    <color name="chat21">#FFFFA500</color>
+    <color name="chat22">#FFDDA0DD</color>
+    <color name="chat23">#FF00CED1</color>
+    <color name="chat24">#FFFFC0CB</color>
+    <color name="chat25">#FFFF69B4</color>
+    <color name="chat26">#FF98FB98</color>
+    <color name="chat27">#FFFFE4B5</color>
+    <color name="chat28">#FFFF00FF</color>
+    <color name="chat29">#FF00BFFF</color>
+    <color name="chat30">#FF20B2AA</color>
+    <color name="chat31">#FFFF7F50</color>
+    <color name="chat32">#FFFFDAB9</color>
+    <color name="chat33">#FF48D1CC</color>
+    <color name="chat34">#FFFF4500</color>
+    <color name="chat35">#FFE6E6FA</color>
+    <color name="chat36">#FF9370DB</color>
+
     <color name="main_color">#FF44546A</color>
     <color name="selected_color">#FF3D659B</color>
     <color name="accent_color">#FF0057FF</color>
