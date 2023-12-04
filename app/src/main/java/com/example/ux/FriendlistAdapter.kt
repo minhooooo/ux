@@ -1,5 +1,6 @@
 package com.example.ux
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.databinding.FriendItemViewBinding
 import kotlin.coroutines.coroutineContext
 
-class FriendlistAdapter(private val items: Array<FriendData>) :
+class FriendlistAdapter(val context: Context, private val items: Array<FriendData>) :
     RecyclerView.Adapter<FriendlistAdapter.FriendlistViewHolder>() {
 
     /*private lateinit var friendUnit: (FriendData)->Unit*//*constructor(items : Array<FriendData>, listener: (FriendData) -> Unit) : this(items) {
@@ -43,8 +44,15 @@ class FriendlistAdapter(private val items: Array<FriendData>) :
         fun bind(listener: View.OnClickListener, item: FriendData) {
             binding.apply {
                 //friendItemPictureIv.setBackgroundResource(item.imgResId)
-                val circleBackgroundDrawable = friendItemPictureIv.background as GradientDrawable
-                circleBackgroundDrawable.setColor(Color.LTGRAY)
+//                val circleBackgroundDrawable = friendItemPictureIv.background as GradientDrawable
+
+                val bgColor = item.imgName
+
+                // bgColor를 기반으로 리소스 ID 동적으로 생성
+                val resourceId = context.resources.getIdentifier(bgColor, "drawable", context.packageName)
+                friendItemPictureIv.setBackgroundResource(resourceId)
+
+//                circleBackgroundDrawable.setColor(Color.LTGRAY)
                 friendItemNameTv.text = item.name
                 friendItemStatusTv.text = item.statusMsg
 
