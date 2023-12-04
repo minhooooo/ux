@@ -21,6 +21,7 @@ class ChatParticipantAdapter(private val items: Array<FriendData>) :
                 if (position != RecyclerView.NO_POSITION) {
                     val friend = items[position]
                     toggleMemberSelection(friend)
+
                 }
             }
         }
@@ -28,6 +29,13 @@ class ChatParticipantAdapter(private val items: Array<FriendData>) :
             binding.apply {
                 val circleBackgroundDrawable = friendItemPictureIv.background as GradientDrawable
                 circleBackgroundDrawable.setColor(Color.LTGRAY)
+
+                if (chatMembers.contains(item)) {
+                    circleBackgroundDrawable.setColor(R.drawable.btn_blue) // 선택된 아이템의 배경색을 변경
+                } else {
+                    circleBackgroundDrawable.setColor(Color.LTGRAY) // 선택되지 않은 아이템의 배경색을 기본 값으로 변경
+                }
+
                 friendItemNameTv.text = item.name
                 friendItemStatusTv.text = item.statusMsg
             }
@@ -55,8 +63,10 @@ class ChatParticipantAdapter(private val items: Array<FriendData>) :
 
     fun toggleMemberSelection(friend: FriendData) {
         if (chatMembers.contains(friend)) {
+            //선택해제
             chatMembers.remove(friend)
         } else {
+            //선택
             chatMembers.add(friend)
         }
         notifyDataSetChanged()

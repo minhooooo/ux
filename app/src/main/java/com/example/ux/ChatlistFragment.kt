@@ -91,7 +91,7 @@ class ChatlistFragment : Fragment() {
                         val newRoomName = editTxtNewRoomName.text.toString().trim()
                         if (newRoomName.isNotEmpty()) {
                             val newChatMembers = chatParticipantAdapter.getChatMembers()    //선택된 친구정보 가져오기
-                            newChatMembers.add(FriendData("냠모밈","status","bg6",R.drawable.bg12,myUid))
+                            newChatMembers.add(FriendData("thisUserName","status","bg6",R.drawable.bg12,myUid))
                             System.out.println("new chat members : "+newChatMembers)
                             uploadNewChatMembers(newChatMembers, newRoomName)
 //                            addNewChatRoom(newRoomName)
