@@ -25,6 +25,8 @@ object FriendDataManager {
                             Firebase.database.reference.child("moi").child(it)
                         }
 
+                        var fetchedCount = 0
+
                         friendInfoSnapshots.forEach { friendInfoSnapshot ->
                             friendInfoSnapshot.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -42,8 +44,8 @@ object FriendDataManager {
                                             System.out.println("placeholder : "+name)
                                         }
                                     }
-                                    if (friendDataList.size == friendInfoSnapshots.size-1) {
-                                        System.out.println(friendDataList)
+                                    fetchedCount++
+                                    if (fetchedCount == friendInfoSnapshots.size) {
                                         continuation.resume(friendDataList)
                                     }
                                 }
@@ -62,6 +64,7 @@ object FriendDataManager {
             } catch (e: Exception) {
                 continuation.resumeWithException(e)
             }
+
         }
     }
 
