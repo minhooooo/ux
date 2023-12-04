@@ -193,7 +193,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_row="0"
                 android:layout_column="0"
                 android:layout_gravity="fill"
@@ -284,6 +284,7 @@
 
             <TextView
                 android:layout_row="1"
+                android:layout_height="30dp"
                 android:layout_column="0"
                 android:layout_rowWeight="1"
                 android:background="@drawable/cell_normal"
@@ -379,6 +380,7 @@
             <TextView
                 android:layout_row="2"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -465,6 +467,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="3"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -551,6 +554,7 @@
                 android:layout_row="4"
                 android:layout_column="0"
                 android:gravity="center"
+                android:layout_height="30dp"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
                 android:background="@drawable/cell_normal"
@@ -634,6 +638,7 @@
             <TextView
                 android:layout_row="5"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -718,6 +723,7 @@
             <TextView
                 android:layout_row="6"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -802,6 +808,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="7"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -885,6 +892,7 @@
             <TextView
                 android:layout_row="8"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -969,6 +977,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="9"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -1052,6 +1061,7 @@
             <TextView
                 android:layout_row="10"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -1137,6 +1147,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="11"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -1219,6 +1230,7 @@
             <TextView
                 android:layout_row="12"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -1303,6 +1315,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="13"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -1386,6 +1399,7 @@
             <TextView
                 android:layout_row="14"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -1469,6 +1483,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="15"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:tag="0"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -1550,6 +1565,7 @@
             <TextView
                 android:layout_row="16"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:tag="0"
                 android:gravity="center"
@@ -1633,6 +1649,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="17"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:tag="0"
                 android:layout_gravity="fill"
@@ -1716,6 +1733,7 @@
             <TextView
                 android:layout_row="18"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:layout_gravity="fill"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
@@ -1799,6 +1817,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="19"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:layout_gravity="fill"
                 android:gravity="center"
                 android:textSize="11sp"
@@ -1882,6 +1901,7 @@
             <TextView
                 android:layout_row="20"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -1965,6 +1985,7 @@
                 android:background="@drawable/cell_normal"
                 android:layout_row="21"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:textSize="11sp"
@@ -2047,6 +2068,7 @@
             <TextView
                 android:layout_row="22"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:background="@drawable/cell_normal"
                 android:gravity="center"
                 android:layout_gravity="fill"
@@ -2132,6 +2154,7 @@
                 android:background="@drawable/cell_leftbottom"
                 android:layout_row="23"
                 android:layout_column="0"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:layout_gravity="fill"
                 android:tag="0"
