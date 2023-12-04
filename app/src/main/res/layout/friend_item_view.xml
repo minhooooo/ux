@@ -56,7 +56,7 @@
             android:layout_marginStart="25dp"
             android:layout_marginLeft="26dp"
             android:layout_marginTop="6dp"
-            android:text="상태 메시지"
+            android:text="건국대학교"
             android:textColor="#787878"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@id/friend_item_picture_iv"

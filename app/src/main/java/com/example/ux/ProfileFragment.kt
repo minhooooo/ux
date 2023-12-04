@@ -56,7 +56,7 @@ class ProfileFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         //friendList = ProfileColorStringToInt(friendList) //bg11 -> imgResID
-        friendlistAdapter = FriendlistAdapter(friendList.toTypedArray()) // Adapter 초기화
+        friendlistAdapter = FriendlistAdapter(requireContext(), friendList.toTypedArray()) // Adapter 초기화
         recyclerView.adapter = friendlistAdapter // RecyclerView에 Adapter 설정
 
 
@@ -250,7 +250,7 @@ class ProfileFragment : Fragment() {
                             friendList.add(newFriend)
 
                             // RecyclerView 어댑터에 변경된 데이ㅂ터를 알림
-                            friendlistAdapter = FriendlistAdapter(friendList.toTypedArray())
+                            friendlistAdapter = FriendlistAdapter(requireContext(), friendList.toTypedArray())
                             recyclerView.adapter = friendlistAdapter
                             friendlistAdapter.notifyDataSetChanged()
 
@@ -300,7 +300,7 @@ class ProfileFragment : Fragment() {
                 System.out.println("friendDatalist : "+friendDataList)
                 friendList = friendDataList as MutableList<FriendData>
                 withContext(Dispatchers.Main) {
-                    friendlistAdapter = FriendlistAdapter(friendDataList.toTypedArray())
+                    friendlistAdapter = FriendlistAdapter(requireContext(), friendDataList.toTypedArray())
                     recyclerView.adapter = friendlistAdapter
                 }
             } catch (e: Exception) {
