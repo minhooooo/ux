@@ -4,15 +4,12 @@ import android.content.Context
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 
 object FriendDataManager {
-    val channel = Channel<List<FriendData>>()
     val database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     suspend fun fetchFriendDataForUser(userId: String): List<FriendData> {
@@ -27,7 +24,6 @@ object FriendDataManager {
                         val friendInfoSnapshots = friendUids.map {
                             Firebase.database.reference.child("moi").child(it)
                         }
-
 
                         var fetchedCount = 0
 
