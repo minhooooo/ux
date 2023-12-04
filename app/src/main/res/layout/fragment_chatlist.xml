@@ -28,26 +28,7 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="10dp"
                 android:layout_marginStart="15dp"
-                android:text="총 "
-                android:textColor="@color/black"
-                android:textSize="16dp"
-                android:fontFamily="@font/pretendard_medium" />
-
-            <TextView
-                android:id="@+id/totalChatRoom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="10dp"
-                android:text="0"
-                android:textColor="@color/black"
-                android:textSize="16dp"
-                android:fontFamily="@font/pretendard_semibold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="10dp"
-                android:text="개"
+                android:text="전체 목록"
                 android:textColor="@color/black"
                 android:textSize="16dp"
                 android:fontFamily="@font/pretendard_medium" />

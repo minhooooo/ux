@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -99,7 +100,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
 
             if (chatRooms[position].messages!!.isNotEmpty()) {         //채팅방 메시지가 존재하는 경우
                 setupLastMessageAndDate(holder, position)        //마지막 메시지 및 시각 초기화
-                setupMessageCount(holder, position)
+//                setupMessageCount(holder, position)
             }
         }
     }
@@ -110,29 +111,29 @@ class RecyclerChatRoomsAdapter(val context: Context) :
                 chatRooms[position].messages!!.values.sortedWith(compareBy { it.sended_date })    //메시지 목록에서 시각을 비교하여 가장 마지막 메시지  가져오기
                     .last()
             holder.txt_message.text = lastMessage.content                 //마지막 메시지 표시
-//            holder.txt_date.text = getLastMessageTimeString(lastMessage.sended_date)   //마지막으로 전송된 시각 표시
+            holder.txt_date.text = getLastMessageTimeString(lastMessage.sended_date)   //마지막으로 전송된 시각 표시
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun setupMessageCount(holder: ViewHolder, position: Int) {            //확인되지 않은 메시지 개수 표시
-        try {
-            var unconfirmedCount =
-                chatRooms[position].messages!!.filter {
-                    !it.value.confirmed && !it.value.senderUid.equals(               //메시지 중 확인되지 않은 메시지 개수 가져오기
-                        myUid
-                    )
-                }.size
+//        try {
+//            var unconfirmedCount =
+//                chatRooms[position].messages!!.filter {
+//                    !it.value.confirmed && !it.value.senderUid.equals(               //메시지 중 확인되지 않은 메시지 개수 가져오기
+//                        myUid
+//                    )
+//                }.size
 //            if (unconfirmedCount > 0) {              //확인되지 않은 메시지가 있을 경우
 //                holder.txt_chatCount.visibility = View.VISIBLE           //개수 표시
 //                holder.txt_chatCount.text = unconfirmedCount.toString()
 //            } else
 //                holder.txt_chatCount.visibility = View.GONE
-        } catch (e: Exception) {
-            e.printStackTrace()
+//        } catch (e: Exception) {
+//            e.printStackTrace()
 //            holder.txt_chatCount.visibility = View.GONE
-        }
+//        }
     }
 
     fun getLastMessageTimeString(lastTimeString: String): String {           //마지막 메시지가 전송된 시각 구하기
@@ -193,7 +194,7 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         var chatroomIcon = itemView.chatroomIcon
         var txt_name = itemView.txtChatlistRoomTitle
         var txt_message = itemView.txtChatlistLastMsg
-//        var txt_date = itemView.txtMessageDate
+        var txt_date = itemView.txtMessageDate
 //        var txt_chatCount = itemView.txtChatCount
     }
 }

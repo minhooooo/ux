@@ -34,9 +34,9 @@
                     android:text="2023년"
                     android:textColor="@color/black"
                     android:textSize="20dp"
-                    android:layout_gravity="center"
-                    android:gravity="center_horizontal"
+                    android:layout_marginLeft="20dp"
                     android:fontFamily="@font/pretendard_semibold" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -55,11 +55,11 @@
                         android:layout_weight="15"
                         android:layout_height="wrap_content"
                         android:text="11월 20일 ~ 12월 10일"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
                         android:layout_gravity="center"
                         android:gravity="center_horizontal"
-                        android:fontFamily="@font/pretendard_semibold" />
+                        android:fontFamily="@font/pretendard_medium"
+                        android:textColor="@color/black"/>
 
                     <ImageView
                         android:id="@+id/next_week"
@@ -70,15 +70,13 @@
                         android:src="@drawable/caret_right" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
+            android:layout_width="80dp"
+            android:layout_height="25dp"
             android:text=""
-            android:textSize="14sp"
+            android:layout_gravity="bottom"
             android:gravity="center" />
 
     </LinearLayout>
@@ -89,8 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:background="#FFFFFF"
         android:theme="@style/mainView"
         android:backgroundTint="@color/time_color"
@@ -171,8 +169,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="20dp"
         android:scrollbars="none">
         <!--시간표-->
