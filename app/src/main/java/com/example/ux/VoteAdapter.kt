@@ -71,10 +71,10 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         val starttime = time.substring(0, 2).toInt()
         val currentweek = voteData.currentweek
         val uid = voteData.userId
-
         var agreeVoteresult : MutableList<UserProfile> = mutableListOf()
         var disagreeVoteresult : MutableList<UserProfile> = mutableListOf()
         var yetVoteresult : MutableList<UserProfile> = mutableListOf()
+
 
         val db = Firebase.database.getReference("chat")
         val meetingRef = db.child(voteData.chatId).child("meeting")
@@ -161,13 +161,14 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
         Log.d("checkbox",voteData.isfixed.toString() )
 
         holder.dropbtn.setOnClickListener {
+            // 각 RecyclerView의 초기 어댑터 설정은 여기서 수행합니다.
+            agreeVoteresult.clear()
+            disagreeVoteresult.clear()
+            yetVoteresult.clear()
             if (voteData.isopend) {
                 holder.dropbtn.setImageResource(R.drawable.icon_droped)
                 holder.droplayout.visibility=View.VISIBLE
-                // 각 RecyclerView의 초기 어댑터 설정은 여기서 수행합니다.
-                agreeVoteresult.clear()
-                disagreeVoteresult.clear()
-                yetVoteresult.clear()
+
 
                 holder.agreeRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
                 holder.agreeRecyclerView.adapter = UserProfileAdapter(agreeVoteresult)
@@ -190,22 +191,29 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                         val disagreeVotes = disagreeVotesSnapshot.children.mapNotNull { it.key }
                         val yetVotes = yetVotesSnapshot.children.mapNotNull { it.key }
 
-                        val totalVotesCount = agreeVotes.size + disagreeVotes.size + yetVotes.size
-                        val loadedVotesCount = AtomicInteger(0)
+                        Log.d("Size","agreeVote "+agreeVotes)
+                        Log.d("Size","disagreeVote "+disagreeVotes)
+                        Log.d("Size","yetVote "+yetVotes)
 
 
                         // 'agree', 'disagree', 'yet'
                         fun loadUserProfile(uids: List<String>, result: MutableList<UserProfile>, onComplete: () -> Unit) {
+                            val loadedVotesCount = AtomicInteger(0)
+
                             for (uid in uids) {
+                                Log.d("loadUserProfile","Vote "+uid)
+
                                 val userRef = Firebase.database.getReference("moi").child(uid)
                                 userRef.addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         val profileColor = snapshot.child("profileColor").getValue(String::class.java) ?: "bg1"
                                         val username = snapshot.child("username").getValue(String::class.java) ?: "알 수 없는 사용자"
-                                        result.add(UserProfile(uid, profileColor, username))
+                                        Log.d("username",username)
+
+                                        result.add(UserProfile(uid,username,profileColor))
 
                                         // 모든 데이터 로드가 완료되었는지 확인합니다.
-                                        if (loadedVotesCount.incrementAndGet() == totalVotesCount) {
+                                        if (loadedVotesCount.incrementAndGet() == uids.size) {
                                             onComplete()
                                         }
                                     }
@@ -226,7 +234,6 @@ class VoteAdapter(private val dataList: List<VoteData>) : RecyclerView.Adapter<V
                         loadUserProfile(disagreeVotes, disagreeVoteresult) {
                             holder.disagreeRecyclerView.adapter?.notifyDataSetChanged()
                             Log.d("notify","disagreeVote "+disagreeVoteresult.size.toString())
-
                         }
                         loadUserProfile(yetVotes, yetVoteresult) {
                             holder.yetRecyclerView.adapter?.notifyDataSetChanged()

@@ -1,6 +1,5 @@
 package com.example.ux
 
-import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.model.UserProfile
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 class UserProfileAdapter(private val userList: List<UserProfile>) : RecyclerView.Adapter<UserProfileAdapter.ViewHolder>() {
 
@@ -43,7 +37,8 @@ class UserProfileAdapter(private val userList: List<UserProfile>) : RecyclerView
             // 리소스 ID가 없을 경우 기본 이미지를 설정합니다.
             holder.profileBG.setImageResource(defaultId)
         }
-        holder.profileName.setText(userProfile.username)
+        Log.d("name",userProfile.username)
+        holder.profileName.text = userProfile.username
     }
 
     override fun getItemCount() = userList.size
