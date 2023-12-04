@@ -33,11 +33,11 @@ object FriendDataManager {
                                     val friendUid = snapshot.key
                                     if (friendUid!="placeholder"){
                                         val name = snapshot.child("username").value.toString()
-                                        val statusMsg = snapshot.child("statusMsg").value.toString()
+                                        val university = snapshot.child("university").value.toString()
                                         val profileColor = snapshot.child("profileColor").value.toString()
 
                                         if (!name.equals("null")){
-                                            val friendData = FriendData(name, statusMsg, profileColor, null,friendInfoSnapshot.key ?: "")
+                                            val friendData = FriendData(name, university, profileColor, null,friendInfoSnapshot.key ?: "")
                                             friendDataList.add(friendData)
                                             System.out.println("name : "+name)
                                         } else {
