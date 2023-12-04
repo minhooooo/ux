@@ -226,9 +226,6 @@ class ProfileFragment : Fragment() {
     private fun addFriendToFirebase(friendUid: String) {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         val databaseRef = FirebaseDatabase.getInstance().reference.child("moi")
-
-        val newFriendNameRef = databaseRef.child(friendUid).child("username")
-
         val newFriendRef = databaseRef.child(friendUid)
 
         newFriendRef.addListenerForSingleValueEvent(object : ValueEventListener{
@@ -248,7 +245,6 @@ class ProfileFragment : Fragment() {
                             )
 
                             // 친구 정보를 friendList에 추가하고 RecyclerView 갱신
-
                             val newFriend = FriendData(newFriendName,newFriendUniv,newFriendImg,resourceId,friendUid)
                             friendList.add(newFriend)
 
@@ -292,63 +288,7 @@ class ProfileFragment : Fragment() {
                 Log.e("FirebaseError", "Database Error: $errorMessage")
             }
         })
-/*
-        newFriendNameRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val newFriendName = snapshot.getValue(String::class.java)
 
-                if (newFriendName != null){
-                    //현재 사용자의 friend 노드에 친구 추가
-                    val currentUserFriendRef = databaseRef.child(currentUserUid ?: "").child("friend")
-                    currentUserFriendRef.child(friendUid).setValue(true)
-                        .addOnSuccessListener {
-                            val university = "univ"
-
-                            // 친구 정보를 friendList에 추가하고 RecyclerView 갱신
-                            val newFriend = FriendData(newFriendName,university,"bg11",R.drawable.bg11,friendUid)
-                            friendList.add(newFriend)
-
-                            // RecyclerView 어댑터에 변경된 데이ㅂ터를 알림
-                            friendlistAdapter = FriendlistAdapter(requireContext(), friendList.toTypedArray())
-                            recyclerView.adapter = friendlistAdapter
-                            friendlistAdapter.notifyDataSetChanged()
-
-                            System.out.println("친구 추가 성공")
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(
-                                requireContext(),
-                                "친구 추가 실패: ${e.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            System.out.println("친구 추가 실패")
-                        }
-
-                    // 친구의 friend 노드에 현재 사용자 추가
-                    val friendRef = databaseRef.child(friendUid).child("friend")
-                    friendRef.child(currentUserUid ?: "").setValue(true)
-                        .addOnSuccessListener {
-
-                            System.out.println("친구에게 나 추가 성공")
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(
-                                requireContext(),
-                                "친구 정보 업데이트 실패: ${e.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                } else {
-                    Toast.makeText(requireContext(), "친구 추가 실패", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                val errorMessage = databaseError.message // 오류 메시지 가져오기
-                Log.e("FirebaseError", "Database Error: $errorMessage")
-            }
-
-        })*/
     }
 
 
