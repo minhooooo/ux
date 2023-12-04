@@ -1,5 +1,6 @@
 package com.example.ux
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.databinding.FriendItemViewBinding
 
-class ChatParticipantAdapter(private val items: Array<FriendData>) :
+class ChatParticipantAdapter(val context: Context,  private val items: Array<FriendData>) :
     RecyclerView.Adapter<ChatParticipantAdapter.ChatParticipantViewHolder>() {
 
     private val chatMembers: MutableList<FriendData> = mutableListOf() // 선택된 멤버 리스트
@@ -28,12 +29,17 @@ class ChatParticipantAdapter(private val items: Array<FriendData>) :
         fun bind(item: FriendData) {
             binding.apply {
                 val circleBackgroundDrawable = friendItemPictureIv.background as GradientDrawable
-                circleBackgroundDrawable.setColor(Color.LTGRAY)
+                System.out.println("chat pp"+item)
+                val bgColor = item.imgName
+                val resourceId = context.resources.getIdentifier(bgColor, "drawable", context.packageName)
+                circleBackgroundDrawable.setColor(resourceId)
 
                 if (chatMembers.contains(item)) {
-                    circleBackgroundDrawable.setColor(R.drawable.btn_blue) // 선택된 아이템의 배경색을 변경
+                    friendItemLayout.background.setTint(Color.parseColor("#59002AFF"))
+                    //circleBackgroundDrawable.setColor(R.drawable.btn_blue) // 선택된 아이템의 배경색을 변경
                 } else {
-                    circleBackgroundDrawable.setColor(Color.LTGRAY) // 선택되지 않은 아이템의 배경색을 기본 값으로 변경
+                    friendItemLayout.background.setTint(Color.WHITE)
+                    //circleBackgroundDrawable.setColor(Color.LTGRAY) // 선택되지 않은 아이템의 배경색을 기본 값으로 변경
                 }
 
                 friendItemNameTv.text = item.name

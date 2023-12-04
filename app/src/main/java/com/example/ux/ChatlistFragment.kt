@@ -84,14 +84,15 @@ class ChatlistFragment : Fragment() {
                 System.out.println("fetched friend list = " + fetchedFriendList)
                 withContext(Dispatchers.Main) {
                     val chatParticipantAdapter =
-                        ChatParticipantAdapter(fetchedFriendList.toTypedArray())
+                        ChatParticipantAdapter(requireContext(), fetchedFriendList.toTypedArray())
                     chatPpRecyclerView.adapter = chatParticipantAdapter
 
                     builder.setPositiveButton("확인") { dialog, _ ->
                         val newRoomName = editTxtNewRoomName.text.toString().trim()
                         if (newRoomName.isNotEmpty()) {
                             val newChatMembers = chatParticipantAdapter.getChatMembers()    //선택된 친구정보 가져오기
-                            newChatMembers.add(FriendData("thisUserName","건국대학교","bg6",R.drawable.bg12,myUid))
+                            newChatMembers.add(FriendData("thisUserName","thisUniv","bg1",R.drawable.bg12,myUid)) // add this user
+                            //사실상 uploadNewChatMembers에서 uid만 뽑아다 쓰기 때문에 나머지는 dummy data 삽입
                             System.out.println("new chat members : "+newChatMembers)
                             uploadNewChatMembers(newChatMembers, newRoomName)
 //                            addNewChatRoom(newRoomName)
