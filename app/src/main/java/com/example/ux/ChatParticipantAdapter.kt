@@ -37,7 +37,7 @@ class ChatParticipantAdapter(private val items: Array<FriendData>) :
                 }
 
                 friendItemNameTv.text = item.name
-                friendItemStatusTv.text = item.statusMsg
+                friendItemUnivTv.text = item.university
             }
         }
     }

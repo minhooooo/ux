@@ -30,7 +30,7 @@ class FriendlistAdapter(val context: Context, private val items: Array<FriendDat
         val listener = View.OnClickListener { it ->
             Toast.makeText(
                 it.context,
-                "Clicked -> name : ${item.name}, status msg : ${item.statusMsg}",
+                "Clicked -> name : ${item.name}, univ : ${item.university}",
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -54,7 +54,7 @@ class FriendlistAdapter(val context: Context, private val items: Array<FriendDat
 
 //                circleBackgroundDrawable.setColor(Color.LTGRAY)
                 friendItemNameTv.text = item.name
-                friendItemStatusTv.text = item.statusMsg
+                friendItemUnivTv.text = item.university
 
                 /*friendUnit?.let {
                         root.setOnClickListener {

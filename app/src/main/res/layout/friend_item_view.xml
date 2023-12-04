@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="@id/friend_item_picture_iv" />
 
         <TextView
-            android:id="@+id/friend_item_status_tv"
+            android:id="@+id/friend_item_univ_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
