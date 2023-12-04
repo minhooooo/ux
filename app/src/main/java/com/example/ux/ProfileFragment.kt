@@ -16,13 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ux.FriendDataManager.fetchFriendDataForUser
 import com.example.ux.databinding.FragmentProfileBinding
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.ktx.Firebase
-import com.google.protobuf.Value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,7 +67,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // 사용자 정보 가져와서 화면에 설정
-//        displayInfo()
+        displayInfo()
 
         // 사용자 배경색 정보 가져와서 화면에 설정
         displayProfileColor()
@@ -104,6 +103,33 @@ class ProfileFragment : Fragment() {
 
 
         fetchFriendDataAndSetAdapter()
+    }
+
+    private fun displayInfo() {
+        val usersRef = database.child("moi")
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        usersRef.child(currentUserUid ?: "").addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val username = snapshot.child("username").getValue(String::class.java)
+                val major = snapshot.child("major").getValue(String::class.java)
+
+                System.out.println("this user name : "+username)
+                System.out.println("this user major : "+major)
+
+                binding.nickname.setText(username ?: "모이")
+                binding.major.setText(major ?: "모이학과")
+                //todo 학과정보 받아오기
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                val errorMessage = databaseError.message // 오류 메시지 가져오기
+                Log.e("FirebaseError", "Database Error: $errorMessage")
+            }
+
+        })
+
+
     }
 
     private fun openAddFriendDialog() {
@@ -157,13 +183,11 @@ class ProfileFragment : Fragment() {
                                     }
                                 }
 
-                                override fun onCancelled(error: DatabaseError) {
-                                    TODO("Not yet implemented")
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    val errorMessage = databaseError.message // 오류 메시지 가져오기
+                                    Log.e("FirebaseError", "Database Error: $errorMessage")
                                 }
                             })
-
-
-
                             break
                         }
                     }
@@ -180,8 +204,8 @@ class ProfileFragment : Fragment() {
                     }
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    val errorMessage = error.message
+                override fun onCancelled(databaseError: DatabaseError) {
+                    val errorMessage = databaseError.message
 
                     Toast.makeText(
                         requireContext(),
@@ -260,8 +284,9 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+            override fun onCancelled(databaseError: DatabaseError) {
+                val errorMessage = databaseError.message // 오류 메시지 가져오기
+                Log.e("FirebaseError", "Database Error: $errorMessage")
             }
 
         })
@@ -336,7 +361,8 @@ class ProfileFragment : Fragment() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Error handling
+                val errorMessage = databaseError.message // 오류 메시지 가져오기
+                Log.e("FirebaseError", "Database Error: $errorMessage")
             }
         })
     }
