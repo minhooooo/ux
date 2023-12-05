@@ -45,6 +45,9 @@ class RecyclerChatRoomsAdapter(val context: Context) :
                         Log.i("ggg", chatRooms.toString())
                         chatRoomKeys.add(data.key!!)
                     }
+
+                    chatRooms.sortByDescending { calculateLastMessageTimestamp(it) }
+
                     notifyDataSetChanged()
                 }
             })
@@ -103,6 +106,11 @@ class RecyclerChatRoomsAdapter(val context: Context) :
 //                setupMessageCount(holder, position)
             }
         }
+    }
+
+    private fun calculateLastMessageTimestamp(chatRoom: ChatRoom): Long {
+        val lastMessage = chatRoom.messages?.values?.maxByOrNull { it.sended_date }
+        return lastMessage?.sended_date?.toLongOrNull() ?: 0
     }
 
     private fun setupLastMessageAndDate(holder: ViewHolder, position: Int) { //마지막 메시지 및 시각 초기화
