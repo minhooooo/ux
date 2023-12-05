@@ -33,26 +33,38 @@ class RecyclerChatRoomsAdapter(val context: Context) :
         setupAllUserList()
     }
 
-    fun setupAllUserList() {     //전체 채팅방 목록 초기화 및 업데이트
+    fun setupAllUserList() {
         FirebaseDatabase.getInstance().getReference("chat")
             .orderByChild("member/$myUid").equalTo(true)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {}
+
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    chatRooms.clear()
+                    val newChatRooms = mutableListOf<ChatRoom>()  // 새로운 정렬된 리스트
+                    val newChatRoomKeys = mutableListOf<String>() // 새로운 키 리스트
+
                     for (data in snapshot.children) {
-                        chatRooms.add(data.getValue<ChatRoom>()!!)
-                        Log.i("ggg", chatRooms.toString())
-                        chatRoomKeys.add(data.key!!)
+                        val chatRoom = data.getValue<ChatRoom>()!!
+                        newChatRooms.add(chatRoom)
+                        newChatRoomKeys.add(data.key!!)
                     }
 
-                    chatRooms.sortByDescending { calculateLastMessageTimestamp(it) }
+                    val sortedPairs = newChatRooms.zip(newChatRoomKeys)
+                        .sortedByDescending { (chatRoom, _) -> calculateLastMessageTimestamp(chatRoom) }
+
+                    // 언팩해서 갱신
+                    chatRooms.clear()
+                    chatRoomKeys.clear()
+                    for ((room, key) in sortedPairs) {
+                        chatRooms.add(room)
+                        chatRoomKeys.add(key)
+                    }
 
                     notifyDataSetChanged()
                 }
             })
-
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.chatlist_item_view, parent, false)
