@@ -167,7 +167,7 @@ class ChatRankFragment : Fragment() {
                                 .sortedByDescending { it.second }
                             //Log.d("sortedData", sortedByFrequency.size.toString())
 
-                            val topFrequencies = sortedByFrequency.map { it.second }.distinct().take(3)
+                            val topFrequencies = sortedByFrequency.map { it.second }.distinct().take(2)
                             val topItems = sortedByFrequency.filter { it.second in topFrequencies }.toMap()
                             //Log.d("topItems", topItems.size.toString())
 
