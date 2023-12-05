@@ -293,8 +293,8 @@ class ChatRankFragment : Fragment() {
 
         // 새로운 주의 날짜로 tempweek 업데이트
         var newYear = cal.get(Calendar.YEAR).toString()
-        var newMonth = (cal.get(Calendar.MONTH) + 1).toString() // 월은 0부터 시작하므로 1 더함
-        var newDay = cal.get(Calendar.DAY_OF_MONTH).toString()
+        var newMonth = String.format("%02d", cal.get(Calendar.MONTH) + 1)  // 월은 0부터 시작하므로 1 더함
+        var newDay = String.format("%02d", cal.get(Calendar.DAY_OF_MONTH))
 
         // tempweek 업데이트
         tempweek[0] = newYear
@@ -305,8 +305,8 @@ class ChatRankFragment : Fragment() {
         cal.add(Calendar.DAY_OF_MONTH, num)
 
         newYear = cal.get(Calendar.YEAR).toString()
-        newMonth = (cal.get(Calendar.MONTH) + 1).toString() // 월은 0부터 시작하므로 1 더함
-        newDay = cal.get(Calendar.DAY_OF_MONTH).toString()
+        newMonth = String.format("%02d", cal.get(Calendar.MONTH) + 1) // 월은 0부터 시작하므로 1 더함
+        newDay = String.format("%02d", cal.get(Calendar.DAY_OF_MONTH))
 
         tempweek[3] = newYear
         tempweek[4] = newMonth

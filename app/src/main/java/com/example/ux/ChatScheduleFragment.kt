@@ -60,9 +60,10 @@ class ChatScheduleFragment : Fragment() {
         var currentweek = week(formattedDate)
 
 
-        onUserInteractionChangedData(currentweek)
         // Firebase에서 데이터 로드
         loadDataFromFirebase(chatId!!,currentweek) //db가져오기
+        onUserInteractionChangedData(currentweek)
+
         return binding.root
 
     }
@@ -95,7 +96,7 @@ class ChatScheduleFragment : Fragment() {
                                         FixededTextViewIds.add(key) // 키를 리스트에 추가합니다.
                                     }
                                 }
-
+                                Log.d("current", "after"+FixededTextViewIds.size.toString())
                                 updateUIWithLoadedData(resId)
                             }
                             override fun onCancelled(error: DatabaseError) {
@@ -149,8 +150,9 @@ class ChatScheduleFragment : Fragment() {
                 // UI 업데이트
                 nowYear.setText("${tempweek[0]}년")
                 nowWeek.setText("${tempweek[1]}월${tempweek[2]}일 ~ ${tempweek[4]}월${tempweek[5]}일")
+                Log.d("current", "before"+FixededTextViewIds.size.toString())
 
-                loadDataFromFirebase(uid!!,tempweek)
+                loadDataFromFirebase(chatId!!,tempweek)
             }
             nextWeek.setOnClickListener {
                 FixededTextViewIds.forEach { textViewIdName ->
@@ -166,7 +168,7 @@ class ChatScheduleFragment : Fragment() {
                 nowYear.setText("${tempweek[0]}년")
                 nowWeek.setText("${tempweek[1]}월${tempweek[2]}일 ~ ${tempweek[4]}월${tempweek[5]}일")
 
-                loadDataFromFirebase(uid!!,tempweek)
+                loadDataFromFirebase(chatId!!,tempweek)
             }
 
         }
