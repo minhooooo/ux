@@ -19,6 +19,7 @@
 ![슬라이드16](https://github.com/minhooooo/ux/assets/80433455/77079bae-817c-407c-ba58-fe42e3af9b23)
 ![슬라이드17](https://github.com/minhooooo/ux/assets/80433455/53f45462-b181-44ac-94af-6e4c855e92ae)
 ![슬라이드18](https://github.com/minhooooo/ux/assets/80433455/8a050fac-5dae-4863-a6ce-2adf6e0163fe)
+<br><br>
 
 ## ⏰ 프로젝트 기간
 2023.09.13 ~ 2023.12.06
